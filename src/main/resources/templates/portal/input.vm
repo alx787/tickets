@@ -1,0 +1,6 @@
+##http://localhost:2990/jira/secure/portalAction!default.jspa
+##include("./header.vm")
+##$webResourceManager.requireResource("ru.ath.asu.tickets:tickets-resources")
+##include("http://localhost:2990/jira/download/resources/ru.ath.asu.tickets:tickets-resources/templates/portal/header.vm")
+##include("header.vm")
+<h1>input.vm</h1>
