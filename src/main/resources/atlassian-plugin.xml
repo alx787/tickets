@@ -16,7 +16,6 @@
     <resource type="download" name="tickets.css" location="/css/tickets.css"/>  
     <resource type="download" name="tickets.js" location="/js/tickets.js"/>  
     <resource type="download" name="images/" location="/images"/>
-    <resource type="download" name="header.vm" location="/templates/portal/header.vm"/>
     <context>tickets</context>
   </web-resource>  
   <webwork1 key="portal" name="portal" i18n-name-key="portal.name"> 
