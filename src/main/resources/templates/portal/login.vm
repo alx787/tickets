@@ -1,0 +1,26 @@
+
+
+
+<div style="margin: 100px 0 200px 0; text-align: center">
+
+    <h1>Авторизация</h1>
+
+
+    <form class="aui" style="width: 450px; margin: 0 auto;" method="post" action="portalAction!auth.jspa">
+        <div style="margin-top: 20px; text-align: right">
+            <label for="login-name">Имя пользователя (email)<span style="color: #FF0000">*</span></label>
+            <input class="text medium-field" style="margin-right: 50px" type="text" id="login-name" name="login-name" placeholder="" value="$userName">
+        </div>
+
+        <div style="margin-top: 20px; text-align: right">
+            <label for="login-pass">Пароль<span style="color: #FF0000">*</span></span></label>
+            <input class="text medium-field" style="margin-right: 50px" type="password" id="login-pass" name="login-pass" placeholder="">
+        </div>
+
+        <div style="margin-top: 20px;">
+            <input class="aui-button aui-button-primary" type="submit" value="Войти" id="comment-save-button">
+        </div>
+    </form>
+
+
+</div>
