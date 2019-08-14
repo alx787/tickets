@@ -3,6 +3,12 @@ package ru.ath.asu.portal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
+//import org.springframework.beans.factory.annotation.Qualifier;
+import ru.ath.asu.auth.UserInfo;
+
+//import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 
 public class portalAction extends JiraWebActionSupport
@@ -11,13 +17,21 @@ public class portalAction extends JiraWebActionSupport
 
     private String userName;
 
+
     @Override
     public String execute() throws Exception {
 
-        //return super.execute();
-        //log.warn(" ==== this is log");
-        super.execute();
-        return "login";
+        HttpServletRequest req = getHttpRequest();
+        HttpSession session = req.getSession();
+        String sessUser = (String)session.getAttribute("user");
+        String sessToken = (String)session.getAttribute("token");
+
+        log.warn(" ======== ");
+        log.warn(" sess user:  " + sessUser);
+        log.warn(" sess token: " + sessToken);
+
+        return super.execute();
+        //return "login";
     }
 
     public String doDefault() throws Exception {
@@ -25,7 +39,7 @@ public class portalAction extends JiraWebActionSupport
         return "login";
     }
 
-    public String doAuth() {
+    public String doAuth() throws Exception {
 
         String loginName = getHttpRequest().getParameter("login-name");
         String loginPass = getHttpRequest().getParameter("login-pass");
@@ -39,13 +53,28 @@ public class portalAction extends JiraWebActionSupport
 
         // проверка логина пароля
         if (checkPass(loginName, loginPass)) {
+
+            HttpServletRequest req = getHttpRequest();
+            HttpSession session = req.getSession();
+            session.setAttribute("user", loginName);
+            session.setAttribute("token", loginPass);
+
+
             log.warn(" ===== авторизовался");
-            return "login";
+//            return getRedirect("portalAction!menu.jspa");
+            return "menu";
         }
 
         log.warn(" ===== не авторизовался");
         return "login";
     }
+
+
+    public String doMenu() {
+        log.warn(" ===== menu");
+        return "menu";
+    }
+
 
     // здесь проверка логина и пароля
     private boolean checkPass(String login, String password) {

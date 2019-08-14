@@ -1,0 +1,31 @@
+
+<div style="margin: 100px 0 200px 0; text-align: center">
+
+    <h1>Создать заявку</h1>
+
+    <form class="aui" style="width: 700px; margin: 0 auto;">
+        <div style="text-align: left;">
+            <label>Тема заявки</label>
+            <input style="width: 690px; padding: 5px;" type="text" id="ticket-theme" name="ticket-theme" placeholder="Тема заявки">
+        </div>
+
+        <div style="text-align: left;">
+            <label>Текст заявки</label>
+            <textarea style="width: 690px; padding: 5px;" name="ticket-input" id="ticket-input" placeholder="Наберите текст заявки здесь..."></textarea>
+        </div>
+
+
+        <div>
+            <label for="ticket-file-upload">Добавить файлы</label>
+            <input type="file" id="ticket-file-upload" name="ticket-file-upload">
+        </div>
+
+        <div class="buttons-container">
+            <div class="buttons">
+                <input class="button submit" type="submit" value="Создать" id="comment-save-button">
+                <a class="cancel" href="#">Отмена</a>
+            </div>
+        </div>
+
+    </form>
+</div>

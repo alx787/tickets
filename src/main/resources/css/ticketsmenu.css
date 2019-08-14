@@ -1,0 +1,21 @@
+
+.ath-main-menu {
+    list-style: none;
+    padding: 0;
+}
+
+.ath-main-menu li {
+    height: 50px;
+    line-height: 50px;
+}
+
+.ath-main-menu li a {
+    display: block;
+    color: #42526e;
+    font-size: 16px;
+}
+
+.ath-main-menu li a:hover {
+    background-color: rgba(9, 30, 66, 0.08);
+    text-decoration: none;
+}
