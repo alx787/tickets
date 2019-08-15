@@ -4,25 +4,25 @@
     <h1>Создать заявку</h1>
 
     <form class="aui" style="width: 700px; margin: 0 auto;">
-        <div style="text-align: left;">
+        <div style="margin-top: 20px; text-align: left;">
             <label>Тема заявки</label>
             <input style="width: 690px; padding: 5px;" type="text" id="ticket-theme" name="ticket-theme" placeholder="Тема заявки">
         </div>
 
-        <div style="text-align: left;">
+        <div style="margin-top: 20px; text-align: left;">
             <label>Текст заявки</label>
-            <textarea style="width: 690px; padding: 5px;" name="ticket-input" id="ticket-input" placeholder="Наберите текст заявки здесь..."></textarea>
+            <textarea style="width: 690px; height: 300px; padding: 5px;" name="ticket-input" id="ticket-input" placeholder="Наберите текст заявки здесь..."></textarea>
         </div>
 
 
-        <div>
-            <label for="ticket-file-upload">Добавить файлы</label>
-            <input type="file" id="ticket-file-upload" name="ticket-file-upload">
+        <div style="margin-top: 20px; text-align: left;">
+            <label>Добавить файлы</label>
+            <input style="width: 690px; border: 1px solid #d8dce1; width: 693px; padding: 5px;" type="file" id="ticket-file-upload" name="ticket-file-upload">
         </div>
 
-        <div class="buttons-container">
+        <div style="margin-top: 40px; text-align: center;">
             <div class="buttons">
-                <input class="button submit" type="submit" value="Создать" id="comment-save-button">
+                <input class="aui-button aui-button-primary" type="submit" value="Создать заявку" id="comment-save-button">
                 <a class="cancel" href="#">Отмена</a>
             </div>
         </div>

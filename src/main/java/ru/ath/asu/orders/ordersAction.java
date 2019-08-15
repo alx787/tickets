@@ -18,4 +18,8 @@ public class ordersAction extends JiraWebActionSupport
         return "ticketnew";
     }
 
+    public String doActiveTicket() throws Exception {
+        return "ticketactive";
+    }
+
 }

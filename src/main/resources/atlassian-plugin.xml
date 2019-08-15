@@ -44,6 +44,7 @@
       <view name="input">/templates/orders/input.vm</view>
       <view name="error">/templates/orders/error.vm</view>
       <view name="ticketnew">/templates/orders/ticketnew.vm</view>
+      <view name="ticketactive">/templates/orders/ticketactive.vm</view>
     </action>
   </actions>
 
