@@ -1,5 +1,22 @@
 
-<div style="margin: 100px 0 200px 0; text-align: center">
+<div style="margin: 5px 0 0 0; text-align: center">
+    <div style="width: 700px; margin: 0 auto; text-align: left;">
+        <div style="width: 550px; font-size: 30px;">
+            <span class="aui-icon aui-icon-large aui-iconfont-office-building">Insert meaningful text here for accessibility</span> ОАО Автотранспортное хозяйство
+        </div>
+        <div style="width: 550px; font-size: 30px;">
+            <span class="aui-icon aui-icon-large aui-iconfont-location">Insert meaningful text here for accessibility</span> КЧАК
+        </div>
+        <div style="width: 550px; font-size: 30px;">
+            <span class="aui-icon aui-icon-large aui-iconfont-person">Insert meaningful text here for accessibility</span> Иванов Иван Иванович
+        </div>
+
+    </div>
+</div>
+
+
+
+<div style="margin: 30px 0 200px 0; text-align: center">
 
     <h1>Создать заявку</h1>
 

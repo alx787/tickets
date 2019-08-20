@@ -1,63 +1,244 @@
 
+$webResourceManager.requireResourcesForContext("tickets")
+$webResourceManager.requireResource("com.atlassian.auiplugin:aui-date-picker")
+$webResourceManager.requireResource("com.atlassian.auiplugin:dialog2")
+
+
+
+
+<section id="demo-dialog" class="aui-dialog2 aui-dialog2-large aui-layer" role="dialog" aria-hidden="true">
+    <header class="aui-dialog2-header">
+        <h2 class="aui-dialog2-header-main">Заявка 00129 от 20.05.2019</h2>
+        <a class="aui-dialog2-header-close">
+            <span class="aui-icon aui-icon-small aui-iconfont-close-dialog">Close</span>
+        </a>
+    </header>
+
+    <div class="aui-dialog2-content">
+        <div style="padding: 5px;">
+            <span style="font-weight: bold">Подключение удаленного рабочего стола с пасьянсом Паук</span>
+        </div>
+
+        <div style="margin-top: 10px; padding: 5px;">
+            Подключение удаленного рабочего стола с пасьянсом ПаукПодключение удаленного рабочего стола с пасьянсом Паук
+            Подключение удаленного рабочего стола с пасьянсом ПаукПодключение удаленного рабочего стола с пасьянсом Паук
+            Подключение удаленного рабочего стола с пасьянсом ПаукПодключение удаленного рабочего стола с пасьянсом Паук
+            Подключение удаленного рабочего стола с пасьянсом Паук
+            Подключение удаленного рабочего стола с пасьянсом ПаукПодключение удаленного рабочего стола с пасьянсом Паук
+            Подключение удаленного рабочего стола с пасьянсом Паук
+            Подключение удаленного рабочего стола с пасьянсом ПаукПодключение удаленного рабочего стола с пасьянсом Паук
+            Подключение удаленного рабочего стола с пасьянсом Паук
+            Подключение удаленного рабочего стола с пасьянсом ПаукПодключение удаленного рабочего стола с пасьянсом Паук
+            Подключение удаленного рабочего стола с пасьянсом Паук
+            Подключение удаленного рабочего стола с пасьянсом ПаукПодключение удаленного рабочего стола с пасьянсом Паук
+            Подключение удаленного рабочего стола с пасьянсом Паук
+        </div>
+
+
+        <div style="display: none">
+            <div style="margin-top: 10px">
+                <span style="font-weight: bold">Комментарии</span>
+            </div>
+
+            <div style="margin-top: 10px; padding: 5px; border-radius: 3px;">
+
+                <div style="width: 700px; margin-bottom: 10px;">
+                    <div style="width: 400px; border: 1px solid #939dac; border-radius: 5px; padding: 3px;">
+                        Комментарий мой
+                    </div>
+                </div>
+                <div style="width: 700px; text-align: right">
+                    <div style="margin-left: 300px; width: 400px; text-align: right; background-color: #344562; color: #FFFFFF; border-radius: 5px; padding: 3px; ">
+                        Комментарий админа
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div style="display: none">
+            <div style="background-color: #f4f5f7; padding: 5px; width:  180px; cursor:  pointer;">
+                <span class="aui-icon aui-icon-small aui-iconfont-comment">View </span> Добавить комментарий
+            </div>
+
+            <div style="margin-top: 10px; display: none">
+                <textarea style="width: 500px; height: 100px;"></textarea>
+
+                <button class="aui-button">
+                    <span class="aui-icon aui-icon-small aui-iconfont-check"></span>добавить
+                </button>
+            </div>
+        </div>
+
+
+    </div>
+    <footer class="aui-dialog2-footer">
+        <div class="aui-dialog2-footer-actions">
+            <button id="dialog-submit-button" class="aui-button aui-button-primary">Закрыть</button>
+        </div>
+    </footer>
+</section>
+
+
+
+
+
 <div style="margin: 100px 0 200px 0; text-align: center">
 
     <h1>Заявки в работе</h1>
 
     <div class="aui" style="width: 700px; margin: 0 auto;">
-        <div style="margin-top: 20px; text-align: left;">
-            <label>Найти по номеру</label>
+        <div style="margin-top: 20px; text-align: center;">
+            <label>Номер</label>
             &nbsp;
-            <input style="width: 480px; padding: 5px;" type="text" id="ticket-number" name="ticket-number" placeholder="Номер заявки">
+            <input style="width: 100px; padding: 5px;" type="text" id="ticket-number" name="ticket-number" placeholder="Номер заявки">
             &nbsp;
+            &nbsp;
+
+
+            <label>период с</label>
+            &nbsp;
+            <input class="aui-date-picker" style="padding: 5px; width: 80px" id="date-begin" type="date" />
+            &nbsp;
+            <label>по</label>
+            &nbsp;
+            <input class="aui-date-picker" style="padding: 5px; width: 80px" id="date-end" type="date" />
+            &nbsp;
+            &nbsp;
+
+
             <button class="aui-button aui-button-primary">Поиск</button>
         </div>
 
 
 
-        <table class="aui">
-            <thead>
-            <tr>
-                <th id="name">Name</th>
-                <th id="type">Type</th>
-                <th id="order">Order</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td headers="name">Default</td>
-                <td headers="type">Internal Directory</td>
-                <td class="order" headers="order">
-                    <ul class="menu">
-                        <li>
-                            <a class="down" href="#">Down</a>
-                        </li>
-                    </ul>
-                </td>
-            </tr>
-            <tr>
-                <td headers="name">Corporate LDAP</td>
-                <td headers="type">Microsoft Active Directory</td>
-                <td class="order" headers="order">
-                    <ul class="menu">
-                        <li>
-                            <a class="up" href="#">Up</a>
-                        </li>
-                        <li>
-                            <a class="down" href="#">Down</a>
-                        </li>
-                    </ul>
-                </td>
-             </tr>
-            </tbody>
-        </table>
 
 
-        <div style="margin-top: 40px; text-align: center;">
-            <div class="buttons">
-                <input class="aui-button aui-button-primary" type="submit" value="Создать заявку" id="comment-save-button">
-                <a class="cancel" href="#">Отмена</a>
+        <div>
+
+            ## заголовок таблицы
+            <div style="width: 100%; font-weight: bold; margin: 20px 0 10px 10px">
+                Выберите заявку (нажмите на значок <span class="aui-icon aui-icon-small aui-iconfont-comment">Добавить комментарий</span> чтобы посмотреть)
             </div>
+
+            <div style="width: 100%; height: 30px; background-color: #0747a6; color: #FFFFFF; line-height: 29px; border-radius: 3px;">
+                <div style="float: left; width: 100px">Дата</div>
+                <div style="float: left; width: 100px">Номер</div>
+                <div style="float: left; width: 100px">Тема заявки</div>
+            </div>
+
+
+            <div style="width: 100%; height: 300px; overflow-y: auto; overflow-x: hidden; background-color: #FFFFFF;">
+                <table id="ticketsFromUsers" class="aui">
+                    <tbody>
+
+                        <tr>
+                            <td style="padding: 5px 10px; width: 80px; text-align: center">20.05.2019</td>
+                            <td style="padding: 5px 10px; width: 80px; text-align: center">00129</td>
+                            <td style="padding: 5px 10px;width: 420px;white-space: nowrap;text-overflow:  ellipsis; overflow-x:  hidden;">Подключение удаленного рабочего стола с пасьянсом Паук и пасьянсом косынка и сапером еще</td>
+
+                            <td style="padding: 5px 10px; width: 40px; text-align: left;">
+                                <span class="aui-icon aui-icon-small aui-iconfont-comment">Добавить комментарий</span>
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td style="padding: 5px 10px; width: 80px; text-align: center">20.05.2019</td>
+                            <td style="padding: 5px 10px; width: 80px; text-align: center">00129</td>
+                            <td style="padding: 5px 10px; width: 420px;">Подключение удаленного рабочего стола с пасьянсом Паук</td>
+
+                            <td style="padding: 5px 10px; width: 40px; text-align: left">
+                                <span class="aui-icon aui-icon-small aui-iconfont-comment">Добавить комментарий</span>
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td style="padding: 5px 10px; width: 80px; text-align: center">20.05.2019</td>
+                            <td style="padding: 5px 10px; width: 80px; text-align: center">00129</td>
+                            <td style="padding: 5px 10px; width: 420px;">Подключение удаленного рабочего стола с пасьянсом Паук</td>
+
+                            <td style="padding: 5px 10px; width: 40px; text-align: left">
+                                <span class="aui-icon aui-icon-small aui-iconfont-comment">Добавить комментарий</span>
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td style="padding: 5px 10px; width: 80px; text-align: center">20.05.2019</td>
+                            <td style="padding: 5px 10px; width: 80px; text-align: center">00129</td>
+                            <td style="padding: 5px 10px; width: 420px;">Подключение удаленного рабочего стола с пасьянсом Паук</td>
+
+                            <td style="padding: 5px 10px; width: 40px; text-align: left">
+                                <span class="aui-icon aui-icon-small aui-iconfont-comment">Добавить комментарий</span>
+                            </td>
+
+                        </tr>
+
+
+                    </tbody>
+                </table>
+            </div>
+
+
         </div>
+
+
+        <div style="margin-top: 20px ;text-align: center">
+            <ol class="aui-nav aui-nav-pagination">
+                <li class="aui-nav-first"><a href="#">В начало</a></li>
+                <li class="aui-nav-previous"><a href="#">След</a></li>
+                <li><a href="http://example.com/">1</a></li>
+                <li class="aui-nav-selected">2</li>
+                <li><a href="http://example.com/">3</a></li>
+                <li class="aui-nav-truncation"><a href="http://example.com/" id="pagination-truncation">&hellip;</a></li>
+                <li><a href="http://example.com/">998</a></li>
+                <li><a href="http://example.com/">999</a></li>
+                <li class="aui-nav-next"><a href="#">Пред
+                </a></li>
+                <li class="aui-nav-last"><a href="#">Посл</a></li>
+            </ol>
+        </div>
+
+
+##        <table class="aui">
+##            <thead>
+##            <tr>
+##                <th id="name">Name</th>
+##                <th id="type">Type</th>
+##                <th id="order">Order</th>
+##            </tr>
+##            </thead>
+##            <tbody>
+##            <tr>
+##                <td headers="name">Default</td>
+##                <td headers="type">Internal Directory</td>
+##                <td class="order" headers="order">
+##                    <ul class="menu">
+##                        <li>
+##                            <a class="down" href="#">Down</a>
+##                        </li>
+##                    </ul>
+##                </td>
+##            </tr>
+##            <tr>
+##                <td headers="name">Corporate LDAP</td>
+##                <td headers="type">Microsoft Active Directory</td>
+##                <td class="order" headers="order">
+##                    <ul class="menu">
+##                        <li>
+##                            <a class="up" href="#">Up</a>
+##                        </li>
+##                        <li>
+##                            <a class="down" href="#">Down</a>
+##                        </li>
+##                    </ul>
+##                </td>
+##             </tr>
+##            </tbody>
+##        </table>
+
 
     </div>
 </div>
