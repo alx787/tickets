@@ -22,21 +22,47 @@ public class CheckSessionAuth implements Filter{
     public void doFilter(ServletRequest request,ServletResponse response,FilterChain chain)throws IOException,ServletException{
         //do some custom handling here
 
+        log.warn(" ======== ");
+        log.warn(" message from filter ");
+
+
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 
-        HttpSession session = httpServletRequest.getSession(false);// don't create if it doesn't exist
+//        HttpSession session = httpServletRequest.getSession(false);// don't create if it doesn't exist
+        HttpSession session = httpServletRequest.getSession(true);
 //        if(session != null && !session.isNew()) {
-        if(session != null) {
-
+        if ((session != null) && (!session.isNew())) {
             String sessUser = (String)session.getAttribute("user");
             String sessToken = (String)session.getAttribute("token");
 
             log.warn(" ======== ");
             log.warn(" sess user from filter:  " + sessUser);
             log.warn(" sess token from filter: " + sessToken);
-//
-//        }
-//            response.sendRedirect("/login.jsp");
+
+            if ((sessUser == null) || (sessToken == null)) {
+
+                ((HttpServletResponse)response).sendRedirect("portalAction!auth.jspa");
+                return;
+            }
+
+
+            if (!sessUser.equals("alx") && sessToken.equals("123")) {
+//                HttpServletResponse httpResponse =
+
+                log.warn(" ======== ");
+                log.warn(" unsuccessful attempt ");
+
+                ((HttpServletResponse)response).sendRedirect("portalAction!auth.jspa");
+                return;
+
+            }
+
+        } else {
+            log.warn(" ======== ");
+            log.warn(" session not found ");
+
+            ((HttpServletResponse)response).sendRedirect("portalAction!auth.jspa");
+            return;
         }
 
         //continue the request

@@ -4,16 +4,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
 //import org.springframework.beans.factory.annotation.Qualifier;
-import ru.ath.asu.auth.UserInfo;
 
 //import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 
-public class portalAction extends JiraWebActionSupport
+public class PortalAction extends JiraWebActionSupport
 {
-    private static final Logger log = LoggerFactory.getLogger(portalAction.class);
+    private static final Logger log = LoggerFactory.getLogger(PortalAction.class);
 
     private String userName;
 
@@ -21,20 +20,28 @@ public class portalAction extends JiraWebActionSupport
     @Override
     public String execute() throws Exception {
 
-        HttpServletRequest req = getHttpRequest();
-        HttpSession session = req.getSession();
-        String sessUser = (String)session.getAttribute("user");
-        String sessToken = (String)session.getAttribute("token");
-
-        log.warn(" ======== ");
-        log.warn(" sess user:  " + sessUser);
-        log.warn(" sess token: " + sessToken);
+//        HttpServletRequest req = getHttpRequest();
+//        HttpSession session = req.getSession();
+//        String sessUser = (String)session.getAttribute("user");
+//        String sessToken = (String)session.getAttribute("token");
+//
+//        log.warn(" ======== ");
+//        log.warn(" sess user:  " + sessUser);
+//        log.warn(" sess token: " + sessToken);
 
         return super.execute();
         //return "login";
     }
 
     public String doDefault() throws Exception {
+
+        // используем метод для разрегистрации пользователя
+        HttpServletRequest req = getHttpRequest();
+        HttpSession session = req.getSession();
+
+        session.invalidate();
+
+
         this.userName = "";
         return "login";
     }
@@ -61,8 +68,8 @@ public class portalAction extends JiraWebActionSupport
 
 
             log.warn(" ===== авторизовался");
-//            return getRedirect("portalAction!menu.jspa");
-            return "menu";
+            return getRedirect("ordersAction!menu.jspa");
+//            return "menu";
         }
 
         log.warn(" ===== не авторизовался");
@@ -70,10 +77,6 @@ public class portalAction extends JiraWebActionSupport
     }
 
 
-    public String doMenu() {
-        log.warn(" ===== menu");
-        return "menu";
-    }
 
 
     // здесь проверка логина и пароля

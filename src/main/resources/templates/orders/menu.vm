@@ -1,0 +1,51 @@
+
+$webResourceManager.requireResource("ru.ath.asu.tickets:tickets-resources-menu")
+
+
+
+<div style="margin: 5px 0 0 0; text-align: center">
+    <div style="width: 700px; margin: 0 auto; text-align: left;">
+
+        <div style="float: right">
+            <p>
+                <button  class="aui-button aui-button-primary" onclick="window.location.href = 'portalAction!default.jspa';">Выход</button>
+            </p>
+        </div>
+
+        <div style="width: 550px; font-size: 17px;">
+            <span class="aui-icon aui-icon-small aui-iconfont-office-building">Insert meaningful text here for accessibility</span> ОАО Автотранспортное хозяйство
+        </div>
+        <div style="width: 550px; font-size: 17px;">
+            <span class="aui-icon aui-icon-small aui-iconfont-location">Insert meaningful text here for accessibility</span> КЧАК
+        </div>
+        <div style="width: 550px; font-size: 17px;">
+            <span class="aui-icon aui-icon-small aui-iconfont-person">Insert meaningful text here for accessibility</span> Иванов Иван Иванович
+        </div>
+
+
+    </div>
+</div>
+
+
+
+<div style="margin: 50px 0 200px 0; text-align: center">
+
+    <h1>Выберите раздел</h1>
+
+    <div style="width:  500px; margin: 30px auto;">
+        <ul class="ath-main-menu">
+            <li><a href="ordersAction!newTicket.jspa">Создать заявку</a></li>
+            <li><a href="ordersAction!activeTicket.jspa">Заявки в работе</a></li>
+            <li><a href="https://example.com/">Архив</a></li>
+
+##        </ul>
+
+##        <div class="aui-nav-heading"><strong></strong></div>
+
+##        <ul class="ath-main-menu">
+
+            <li><a href="https://example.com/">Полезные материалы</a></li>
+        </ul>
+    </div>
+
+</div>

@@ -1,15 +1,24 @@
 
 <div style="margin: 5px 0 0 0; text-align: center">
     <div style="width: 700px; margin: 0 auto; text-align: left;">
-        <div style="width: 550px; font-size: 30px;">
-            <span class="aui-icon aui-icon-large aui-iconfont-office-building">Insert meaningful text here for accessibility</span> ОАО Автотранспортное хозяйство
+
+        <div style="float: right">
+            <p>
+                <button  class="aui-button aui-button-primary" onclick="window.location.href = 'ordersAction!menu.jspa';">Меню</button>
+                <button  class="aui-button aui-button-primary" onclick="window.location.href = 'portalAction!default.jspa';">Выход</button>
+            </p>
         </div>
-        <div style="width: 550px; font-size: 30px;">
-            <span class="aui-icon aui-icon-large aui-iconfont-location">Insert meaningful text here for accessibility</span> КЧАК
+
+        <div style="width: 550px; font-size: 17px;">
+            <span class="aui-icon aui-icon-small aui-iconfont-office-building">Insert meaningful text here for accessibility</span> ОАО Автотранспортное хозяйство
         </div>
-        <div style="width: 550px; font-size: 30px;">
-            <span class="aui-icon aui-icon-large aui-iconfont-person">Insert meaningful text here for accessibility</span> Иванов Иван Иванович
+        <div style="width: 550px; font-size: 17px;">
+            <span class="aui-icon aui-icon-small aui-iconfont-location">Insert meaningful text here for accessibility</span> КЧАК
         </div>
+        <div style="width: 550px; font-size: 17px;">
+            <span class="aui-icon aui-icon-small aui-iconfont-person">Insert meaningful text here for accessibility</span> Иванов Иван Иванович
+        </div>
+
 
     </div>
 </div>
@@ -40,7 +49,7 @@
         <div style="margin-top: 40px; text-align: center;">
             <div class="buttons">
                 <input class="aui-button aui-button-primary" type="submit" value="Создать заявку" id="comment-save-button">
-                <a class="cancel" href="#">Отмена</a>
+                <a class="cancel" href="ordersAction!menu.jspa">Отмена</a>
             </div>
         </div>
 
