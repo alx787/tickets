@@ -9,3 +9,8 @@ Here are the SDK commands you'll use immediately:
 Full documentation is always available at:
 
 https://developer.atlassian.com/display/DOCS/Introduction+to+the+Atlassian+Plugin+SDK
+
+************************************************************
+[INFO] Google Analytics Tracking is enabled to collect AMPS usage statistics.
+[INFO] Although no personal information is sent, you may disable tracking by adding <allowGoogleTracking>false</allowGoogleTracking> to the amps plugin configuration in your pom.xml
+[INFO] Sending event to Google Analytics: AMPS:jira - SDK First Run - 8.0.2
