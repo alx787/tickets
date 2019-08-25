@@ -23,35 +23,41 @@
     <resource type="download" name="ticketsmenu.css" location="/css/ticketsmenu.css"/>  
     <context>ticketsmenu</context> 
   </web-resource>  
+  <web-resource key="tickets-resources-new" name="tickets Web Resources create">
+    <dependency>com.atlassian.auiplugin:ajs</dependency>  
+    <resource type="download" name="ticketnew.js" location="/js/ticketnew.js"/>  
+    <context>ticketsmenu</context> 
+  </web-resource>  
   <webwork1 key="portal" name="portal" i18n-name-key="portal.name"> 
     <description key="portal.description">The portal Plugin</description>  
     <actions> 
-      <action name="ru.ath.asu.portal.PortalAction" alias="portalAction">
+      <action name="ru.ath.asu.portal.PortalAction" alias="portalAction"> 
         <view name="success">/templates/portal/success.vm</view>  
         <view name="input">/templates/portal/input.vm</view>  
         <view name="error">/templates/portal/error.vm</view>  
-        <view name="login">/templates/portal/login.vm</view>  
-      </action>
+        <view name="login">/templates/portal/login.vm</view> 
+      </action> 
     </actions> 
-  </webwork1>
-  <webwork1 key="orders" name="orders" i18n-name-key="orders.name">
-  <description key="orders.description">The orders Plugin</description>
-    <actions>
-      <action name="ru.ath.asu.orders.OrdersAction" alias="ordersAction">
-        <view name="success">/templates/orders/success.vm</view>
-        <view name="input">/templates/orders/input.vm</view>
-        <view name="error">/templates/orders/error.vm</view>
-        <view name="menu">/templates/orders/menu.vm</view>
-        <view name="ticketnew">/templates/orders/ticketnew.vm</view>
-        <view name="ticketactive">/templates/orders/ticketactive.vm</view>
-      </action>
-    </actions>
-  </webwork1>
-
-  <servlet-filter name="Check Session Auth" i18n-name-key="check-session-auth.name" key="check-session-auth" class="ru.ath.asu.servlet.filter.CheckSessionAuth" location="before-dispatch" weight="100">
-    <description key="check-session-auth.description">The Check Session Auth Plugin</description>
-    <!--<url-pattern>secure/portalAction*</url-pattern>-->
-    <url-pattern>/secure/ordersAction*</url-pattern>
-  </servlet-filter>
-
+  </webwork1>  
+  <webwork1 key="orders" name="orders" i18n-name-key="orders.name"> 
+    <description key="orders.description">The orders Plugin</description>  
+    <actions> 
+      <action name="ru.ath.asu.orders.OrdersAction" alias="ordersAction"> 
+        <view name="success">/templates/orders/success.vm</view>  
+        <view name="input">/templates/orders/input.vm</view>  
+        <view name="error">/templates/orders/error.vm</view>  
+        <view name="menu">/templates/orders/menu.vm</view>  
+        <view name="ticketnew">/templates/orders/ticketnew.vm</view>  
+        <view name="ticketactive">/templates/orders/ticketactive.vm</view> 
+      </action> 
+    </actions> 
+  </webwork1>  
+  <servlet-filter name="Check Session Auth" i18n-name-key="check-session-auth.name" key="check-session-auth" class="ru.ath.asu.servlet.filter.CheckSessionAuth" location="before-dispatch" weight="100"> 
+    <description key="check-session-auth.description">The Check Session Auth Plugin</description>  
+    <!--<url-pattern>secure/portalAction*</url-pattern>-->  
+    <url-pattern>/secure/ordersAction*</url-pattern> 
+  </servlet-filter>  
+  <rest name="Tickets Rest" i18n-name-key="tickets-rest.name" key="tickets-rest" path="/exploretickets" version="1.0">
+    <description key="tickets-rest.description">The Tickets Rest Plugin</description> 
+  </rest>
 </atlassian-plugin>
