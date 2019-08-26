@@ -94,15 +94,28 @@ createticket.module = (function () {
             }
         };
 
+        // var formDataTicket = new FormData();
+        // formDataTicket.append("ticket-theme", AJS.$("#ticket-theme").val());
+        // formDataTicket.append("ticket-text", AJS.$("#ticket-text").val());
+        // formDataTicket.append("ticket-file-upload", AJS.$("#ticket-file-upload")[0].files);
+
+        var form = AJS.$("#ticket-form")[0];
+        // Create an FormData object
+        var formDataTicket = new FormData(form);
+
 
         AJS.$.ajax({
             url: restUrl,
             type: 'post',
+            enctype: 'multipart/form-data',
+            processData: false,  // Important!
             dataType: 'json',
-            data: JSON.stringify(jsonData),
+            data: formDataTicket,
+            cache: false,
             async: true,
             // async: asyncFlag,
-            contentType: "application/json; charset=utf-8",
+            // contentType: "application/json; charset=utf-8",
+            contentType: false,
             success: function (data) {
 
             },

@@ -20,7 +20,7 @@ public class TicketsRest {
     @POST
     @AnonymousAllowed
     @Produces({MediaType.APPLICATION_JSON})
-    @Consumes({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.MULTIPART_FORM_DATA})
     @Path("/createticket")
     public Response createIssueFromTicket(String inputJson)
     {

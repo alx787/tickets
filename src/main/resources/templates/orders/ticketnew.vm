@@ -31,7 +31,7 @@ $webResourceManager.requireResource("ru.ath.asu.tickets:tickets-resources-new")
 
     <h1>Создать заявку</h1>
 
-    <form class="aui" style="width: 700px; margin: 0 auto;">
+    <form id="ticket-form" class="aui" style="width: 700px; margin: 0 auto;">
         <div style="margin-top: 20px; text-align: left;">
             <label>Тема заявки</label>
             <input style="width: 690px; padding: 5px;" type="text" id="ticket-theme" name="ticket-theme" placeholder="Тема заявки">
@@ -39,7 +39,7 @@ $webResourceManager.requireResource("ru.ath.asu.tickets:tickets-resources-new")
 
         <div style="margin-top: 20px; text-align: left;">
             <label>Текст заявки</label>
-            <textarea style="width: 690px; height: 300px; padding: 5px;" name="ticket-input" id="ticket-input" placeholder="Наберите текст заявки здесь..."></textarea>
+            <textarea style="width: 690px; height: 300px; padding: 5px;" name="ticket-text" id="ticket-text" placeholder="Наберите текст заявки здесь..."></textarea>
         </div>
 
 
