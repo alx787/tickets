@@ -1,6 +1,47 @@
 
 $webResourceManager.requireResource("ru.ath.asu.tickets:tickets-resources-new")
+$webResourceManager.requireResource("com.atlassian.auiplugin:aui-flag")
+$webResourceManager.requireResource("com.atlassian.auiplugin:dialog2")
 
+
+
+
+###################################################
+## всплывающее окно в случае успеха отправки заявки
+###################################################
+<section id="demo-dialog" class="aui-dialog2 aui-dialog2-small aui-layer" role="dialog" aria-hidden="true">
+    <header class="aui-dialog2-header">
+        <h2 class="aui-dialog2-header-main">Заявка успешно создана </h2>
+##        <a class="aui-dialog2-header-close">
+##            <span class="aui-icon aui-icon-small aui-iconfont-close-dialog">Close</span>
+##        </a>
+    </header>
+
+    <div class="aui-dialog2-content">
+        <div style="padding: 5px;">
+            <span style="font-weight: bold">НОМЕР ЗАЯВКИ - xxx</span>
+        </div>
+
+        <div style="margin-top: 10px; padding: 5px;">
+            Заявка помещена в активные заявки
+        </div>
+    </div>
+
+    <footer class="aui-dialog2-footer">
+        <div class="aui-dialog2-footer-actions">
+            <button type="button" class="aui-button aui-button-primary">Создать еще одну заявку</button>
+            <button type="button" class="aui-button aui-button-primary" onclick="createticket.module.redirectToMenu();">Меню</button>
+            <button type="button" class="aui-button aui-button-primary">Выход</button>
+        </div>
+    </footer>
+</section>
+
+
+
+
+###################################################
+## верхнее меню
+###################################################
 <div style="margin: 5px 0 0 0; text-align: center">
     <div style="width: 700px; margin: 0 auto; text-align: left;">
 
@@ -27,14 +68,17 @@ $webResourceManager.requireResource("ru.ath.asu.tickets:tickets-resources-new")
 
 
 
+###################################################
+## форма заявки
+###################################################
 <div style="margin: 30px 0 200px 0; text-align: center">
 
     <h1>Создать заявку</h1>
 
-    <form id="ticket-form" class="aui" style="width: 700px; margin: 0 auto;">
+    <div id="ticket-form" class="aui" style="width: 700px; margin: 0 auto;">
         <div style="margin-top: 20px; text-align: left;">
             <label>Тема заявки</label>
-            <input style="width: 690px; padding: 5px;" type="text" id="ticket-theme" name="ticket-theme" placeholder="Тема заявки">
+            <input style="width: 690px; padding: 5px;" type="text" id="ticket-theme" name="ticket-theme" placeholder="Тема заявки" aria-controls="ticket-theme-empty">
         </div>
 
         <div style="margin-top: 20px; text-align: left;">
@@ -56,5 +100,5 @@ $webResourceManager.requireResource("ru.ath.asu.tickets:tickets-resources-new")
             </div>
         </div>
 
-    </form>
+    </div>
 </div>

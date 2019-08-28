@@ -5,10 +5,9 @@ $webResourceManager.requireResource("com.atlassian.auiplugin:dialog2")
 
 
 
-
-
-
-
+###################################################
+## всплывающее окно с описанием заявки
+###################################################
 <section id="demo-dialog" class="aui-dialog2 aui-dialog2-large aui-layer" role="dialog" aria-hidden="true">
     <header class="aui-dialog2-header">
         <h2 class="aui-dialog2-header-main">Заявка 00129 от 20.05.2019</h2>
@@ -85,7 +84,9 @@ $webResourceManager.requireResource("com.atlassian.auiplugin:dialog2")
 
 
 
-
+###################################################
+## верхнее меню
+###################################################
 <div style="margin: 5px 0 0 0; text-align: center">
     <div style="width: 700px; margin: 0 auto; text-align: left;">
 
@@ -110,7 +111,9 @@ $webResourceManager.requireResource("com.atlassian.auiplugin:dialog2")
 </div>
 
 
-
+###################################################
+## таблица с заявками
+###################################################
 <div style="margin: 30px 0 200px 0; text-align: center">
 
     <h1>Заявки в работе</h1>
