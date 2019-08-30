@@ -29,9 +29,9 @@ $webResourceManager.requireResource("com.atlassian.auiplugin:dialog2")
 
     <footer class="aui-dialog2-footer">
         <div class="aui-dialog2-footer-actions">
-            <button type="button" class="aui-button aui-button-primary">Создать еще одну заявку</button>
-            <button type="button" class="aui-button aui-button-primary" onclick="createticket.module.redirectToMenu();">Меню</button>
-            <button type="button" class="aui-button aui-button-primary">Выход</button>
+            <button type="button" class="aui-button aui-button-primary" onclick="window.location.href = 'ordersAction!newTicket.jspa';">Создать еще одну заявку</button>
+            <button type="button" class="aui-button aui-button-primary" onclick="window.location.href = 'ordersAction!menu.jspa';">Меню</button>
+            <button type="button" class="aui-button aui-button-primary" onclick="window.location.href = 'portalAction!auth.jspa';">Выход</button>
         </div>
     </footer>
 </section>
@@ -48,7 +48,7 @@ $webResourceManager.requireResource("com.atlassian.auiplugin:dialog2")
         <div style="float: right">
             <p>
                 <button  class="aui-button aui-button-primary" onclick="window.location.href = 'ordersAction!menu.jspa';">Меню</button>
-                <button  class="aui-button aui-button-primary" onclick="window.location.href = 'portalAction!default.jspa';">Выход</button>
+                <button  class="aui-button aui-button-primary" onclick="window.location.href = 'portalAction!auth.jspa';">Выход</button>
             </p>
         </div>
 
@@ -56,10 +56,14 @@ $webResourceManager.requireResource("com.atlassian.auiplugin:dialog2")
             <span class="aui-icon aui-icon-small aui-iconfont-office-building">Insert meaningful text here for accessibility</span> ОАО Автотранспортное хозяйство
         </div>
         <div style="width: 550px; font-size: 17px;">
-            <span class="aui-icon aui-icon-small aui-iconfont-location">Insert meaningful text here for accessibility</span> КЧАК
+            <span class="aui-icon aui-icon-small aui-iconfont-location">Insert meaningful text here for accessibility</span> <span id="ticket-depart">КЧАК</span>
         </div>
         <div style="width: 550px; font-size: 17px;">
-            <span class="aui-icon aui-icon-small aui-iconfont-person">Insert meaningful text here for accessibility</span> Иванов Иван Иванович
+            <span class="aui-icon aui-icon-small aui-iconfont-person">Insert meaningful text here for accessibility</span> <span id="ticket-username">Иванов Иван Иванович</span>
+        </div>
+
+        <div style="display: none">
+            <span id="ticket-useremail">ivanov@kchak.ru</span>
         </div>
 
 

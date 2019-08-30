@@ -69,6 +69,12 @@ createticket.module = (function () {
         formDataTicket.append("ticket-theme", AJS.$("#ticket-theme").val());
         formDataTicket.append("ticket-text", AJS.$("#ticket-text").val());
 
+
+        formDataTicket.append("ticket-username", AJS.$("#ticket-username").text());
+        formDataTicket.append("ticket-useremail", AJS.$("#ticket-useremail").text());
+        formDataTicket.append("ticket-userdepart", AJS.$("#ticket-userdepart").text());
+
+
         var fileObj = AJS.$("#ticket-file-upload")[0].files;
         var fileLen =  fileObj.length;
         for (var i = 0; i < fileLen; i++) {
@@ -113,18 +119,18 @@ createticket.module = (function () {
         });
     };
 
-    var redirectToMenu = function() {
-        window.confirm = null;
-        window.location.href = AJS.params.baseURL + "/secure/ordersAction!menu.jspa";
-            // window.location.href = window.location.protocol +'//'+ window.location.host + window.location.pathname;
-
-    }
+    // var redirectToMenu = function() {
+    //     // window.confirm = null;
+    //     window.location.href = AJS.params.baseURL + "/secure/ordersAction!menu.jspa";
+    //         // window.location.href = window.location.protocol +'//'+ window.location.host + window.location.pathname;
+    //
+    // }
 
 
 
     return {
         createIssue:createIssue,
-        redirectToMenu:redirectToMenu
+        // redirectToMenu:redirectToMenu
     };
 
 }());
