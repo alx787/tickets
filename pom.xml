@@ -149,6 +149,7 @@
             <version>1.4</version>
             <scope>test</scope>
         </dependency>
+
         <!-- https://mvnrepository.com/artifact/com.sun.jersey/jersey-client -->
         <!-- https://mvnrepository.com/artifact/com.atlassian.plugins.rest/atlassian-rest-module -->
         <!--<dependency>-->

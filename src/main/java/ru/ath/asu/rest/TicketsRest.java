@@ -4,28 +4,37 @@ import com.atlassian.jira.bc.issue.IssueService;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.exception.CreateException;
 import com.atlassian.jira.issue.*;
+import com.atlassian.jira.issue.attachment.CreateAttachmentParamsBean;
 import com.atlassian.jira.project.ProjectManager;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.user.util.UserManager;
+import com.atlassian.jira.web.util.AttachmentException;
 import com.atlassian.plugins.rest.common.multipart.FilePart;
 import com.atlassian.plugins.rest.common.multipart.MultipartFormParam;
 import com.atlassian.plugins.rest.common.security.AnonymousAllowed;
 import com.atlassian.jira.project.Project;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+
+import org.apache.commons.fileupload.FileItemIterator;
+import org.apache.commons.fileupload.FileItemStream;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.fileupload.util.Streams;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +53,8 @@ public class TicketsRest {
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.MULTIPART_FORM_DATA})
     @Path("/createticket")
-    public Response createIssueFromTicket(@MultipartFormParam("ticket-theme") FilePart ticketTheme,
+    public Response createIssueFromTicket(@Context HttpServletRequest request,
+                                          @MultipartFormParam("ticket-theme") FilePart ticketTheme,
                                           @MultipartFormParam("ticket-text") FilePart ticketText,
                                           @MultipartFormParam("ticket-username") FilePart ticketUserName,
                                           @MultipartFormParam("ticket-useremail") FilePart ticketUserEmail,
@@ -54,18 +64,10 @@ public class TicketsRest {
     {
 
 
-
-
-
-        log.warn("============= in ws ");
-        log.warn(ticketTheme.getValue());
-        log.warn(ticketText.getValue());
-
-
         // -- план --
         // + 1 получить проект
         // + 2 получить тему и текст
-        // 3 получить вложения (будем получать после создания задачи и прикреплять по одному)
+        // + 3 получить вложения (будем получать после создания задачи и прикреплять по одному)
         // + определится с именем автора
         // + определится с именем исполнителя
         // + 4 создать задачу
@@ -77,8 +79,57 @@ public class TicketsRest {
 //        Project project = projectManager.getProjectObjByKey("ZVK");
 
         // 2 получить тему и текст
-        String tTheme = ticketTheme.getValue();
-        String tText = ticketText.getValue();
+//        String tTheme = ticketTheme.getValue();
+//        String tText = ticketText.getValue();
+        String tTheme = "";
+        String tText = "";
+        String tUserName = "";
+        String tUserEmail = "";
+        String tUserDepart = "";
+
+        InputStream is = null;
+        StringWriter writer = new StringWriter();
+
+        try {
+            // можно было так
+//            String theString = IOUtils.toString(inputStream, encoding);
+
+            is = ticketTheme.getInputStream();
+            IOUtils.copy(is, writer, "UTF-8");
+            tTheme = writer.toString();
+
+            writer.getBuffer().setLength(0);
+            writer.getBuffer().trimToSize();
+
+            is = ticketText.getInputStream();
+            IOUtils.copy(is, writer, "UTF-8");
+            tText = writer.toString();
+
+            writer.getBuffer().setLength(0);
+            writer.getBuffer().trimToSize();
+
+            is = ticketUserName.getInputStream();
+            IOUtils.copy(is, writer, "UTF-8");
+            tUserName = writer.toString();
+
+            writer.getBuffer().setLength(0);
+            writer.getBuffer().trimToSize();
+
+            is = ticketUserEmail.getInputStream();
+            IOUtils.copy(is, writer, "UTF-8");
+            tUserEmail = writer.toString();
+
+            writer.getBuffer().setLength(0);
+            writer.getBuffer().trimToSize();
+
+            is = ticketUserDepart.getInputStream();
+            IOUtils.copy(is, writer, "UTF-8");
+            tUserDepart = writer.toString();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
         // определится с именем автора
         // имя автора будет пока не использовано, в качестве автора будет имя админской учетки
@@ -92,39 +143,10 @@ public class TicketsRest {
         ApplicationUser assignUser = ComponentAccessor.getUserManager().getUserByName(authorUserName);
 
 
-//        Issue issue = ComponentAccessor.getIssueManager().getIssueByCurrentKey("sdfsdf");
-//        issue.getReporter(). get getReporterId();
-
 
 //        ApplicationUser assignUser = userManager.getUserByName("authorUserName");
 
         // 4 создать задачу
-//        MutableIssue newIssue = ComponentAccessor.getIssueFactory().getIssue();
-////        MutableIssue newIssue = issueFactory.getIssue();
-//        newIssue.setProjectId(project.getId());
-//        newIssue.setIssueTypeId("10000");
-//        newIssue.setSummary(tTheme);
-//        newIssue.setDescription(tText);
-//        newIssue.setReporter(authorUser);
-//        newIssue.setAssignee(authorUser);
-//        newIssue.setPriorityId("3");
-//        newIssue.setStatusId("10000");
-//
-//        Issue createdIssue = null;
-//        try {
-//            createdIssue = ComponentAccessor.getIssueManager().createIssueObject(assignUser, newIssue);
-////            createdIssue = issueManager.createIssueObject(assignUser, newIssue);
-//        } catch (CreateException e) {
-//            e.printStackTrace();
-//        }
-
-
-//        JsonObject jsonObject = new JsonObject();
-
-
-
-
-
         IssueService issueService = ComponentAccessor.getIssueService();
         IssueInputParameters issueInputParameters = issueService.newIssueInputParameters();
         issueInputParameters.setSkipScreenCheck(true);
@@ -143,6 +165,12 @@ public class TicketsRest {
         issueInputParameters.setAssigneeId(assignUser.getKey());
 
 
+        // значения дополнительных полей - надо будет обязательно проверку
+//        issueInputParameters.addCustomFieldValue("customfield_10001", tUserEmail);
+//        issueInputParameters.addCustomFieldValue("customfield_10002", tUserDepart);
+//        issueInputParameters.addCustomFieldValue("customfield_10000", tUserName);
+
+
         JiraAuthenticationContext jAC = ComponentAccessor.getJiraAuthenticationContext();
         jAC.setLoggedInUser(authorUser);
 
@@ -151,35 +179,35 @@ public class TicketsRest {
 
         MutableIssue createdIssue = null;
 
-//        if (createValidationResult.isValid()) {
-//            log.error("entrou no createValidationResult");
-//
-//
-//            IssueService.IssueResult createResult = issueService.create(jAC.getLoggedInUser(), createValidationResult);
-//            if (!createResult.isValid()) {
-//                log.error("Error while creating the issue.");
-//            } else {
-//                createdIssue = createResult.getIssue();
-//                log.warn(" ==================== new issue  ");
-//                log.warn(createdIssue.toString());
-//
-//            }
-//        } else {
-//            log.warn(" ==================== create result is not valid  ");
-//
-//            Map<String, String> errorCollection = createValidationResult.getErrorCollection().getErrors();
-//            log.warn("ERROR: Validation errors:");
-//            for (String errorKey : errorCollection.keySet()) {
-//                log.warn(errorKey);
-//                log.warn(errorCollection.get(errorKey));
-//            }
-//
-//        }
+        if (createValidationResult.isValid()) {
+            log.error("entrou no createValidationResult");
+
+
+            IssueService.IssueResult createResult = issueService.create(jAC.getLoggedInUser(), createValidationResult);
+            if (!createResult.isValid()) {
+                log.error("Error while creating the issue.");
+            } else {
+                createdIssue = createResult.getIssue();
+                log.warn(" ==================== new issue  ");
+                log.warn(createdIssue.toString());
+
+            }
+        } else {
+            log.warn(" ==================== create result is not valid  ");
+
+            Map<String, String> errorCollection = createValidationResult.getErrorCollection().getErrors();
+            log.warn("ERROR: Validation errors:");
+            for (String errorKey : errorCollection.keySet()) {
+                log.warn(errorKey);
+                log.warn(errorCollection.get(errorKey));
+            }
+
+        }
 
 
         JsonObject jsonObject = new JsonObject();
         if (createdIssue != null) {
-            jsonObject.addProperty("issueId", String.valueOf(createdIssue.getId()));
+            jsonObject.addProperty("issueId", String.valueOf(createdIssue.getNumber()));
             jsonObject.addProperty("message", "-");
         } else {
             jsonObject.addProperty("issueId", "");
@@ -188,41 +216,60 @@ public class TicketsRest {
 
 
 
+        // 3 получить вложения (будем получать после создания задачи и прикреплять по одному)
+        AttachmentManager attachmentManager = ComponentAccessor.getAttachmentManager();
 
-//        for (FilePart filePart : filePartList) {
-//            String fileName = filePart.getName();
-//            try {
-//                InputStream is = filePart.getInputStream();
-//
+        for (FilePart filePart : filePartList) {
+            // будем пропускать циклы если была ошибка
+            if (createdIssue == null) {
+                continue;
+            }
+
+            try {
+
+                // запишем файл в темп
+                is = filePart.getInputStream();
+
 //                File file = new File("/tmp/" + fileName);
+                File tempFile = File.createTempFile("att_load", "tickets");
+
+                FileOutputStream outputStream = new FileOutputStream(tempFile);
+
+                int read;
+                byte[] bytes = new byte[1024];
+                while ((read = is.read(bytes)) != -1) {
+                    outputStream.write(bytes, 0, read);
+                }
+
+                // прицепим файл во вложение
+                CreateAttachmentParamsBean.Builder builder = new CreateAttachmentParamsBean.Builder();
+                builder.file(new File(tempFile.getAbsolutePath()));
+                builder.filename(filePart.getName());
+                // builder.contentType("image/png");
+                builder.author(assignUser);
+                builder.issue(createdIssue);
+                builder.copySourceFile(true);
+
+                CreateAttachmentParamsBean bean = builder.build();
+                attachmentManager.createAttachment(bean);
+
+                tempFile.delete();
+
+//                try (InputStream inputStream = u.toURL().openStream()) {
 //
-//                try (FileOutputStream outputStream = new FileOutputStream(file)) {
+//                    File file = new File(FILE_TO);
 //
-//                    int read;
-//                    byte[] bytes = new byte[1024];
-//
-//                    while ((read = is.read(bytes)) != -1) {
-//                        outputStream.write(bytes, 0, read);
-//                    }
-//
+//                    // commons-io
+//                    FileUtils.copyInputStreamToFile(inputStream, file);
 //                }
-//
-//
-////                try (InputStream inputStream = u.toURL().openStream()) {
-////
-////                    File file = new File(FILE_TO);
-////
-////                    // commons-io
-////                    FileUtils.copyInputStreamToFile(inputStream, file);
-////                }
-//
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//            log.warn(fileName);
-//
-//        }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (AttachmentException e) {
+                e.printStackTrace();
+            }
+
+        }
 
         Gson gsonToStr = new Gson();
         return Response.ok(gsonToStr.toJson(jsonObject)).build();

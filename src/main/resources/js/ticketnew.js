@@ -100,7 +100,9 @@ createticket.module = (function () {
             // contentType: "application/json; charset=utf-8",
             contentType: false,
             success: function (data) {
+                AJS.$("#new-ticket-number").text("НОМЕР ЗАЯВКИ - " + data.issueId);
                 AJS.dialog2("#demo-dialog").show();
+                // console.log(data);
             },
             error: function (data) {
                 // разблокируем кнопку
