@@ -1,4 +1,4 @@
-package ru.ath.asu.auth;
+package ru.ath.asu.tickets.auth;
 
 public class UserInfo {
     private String email;

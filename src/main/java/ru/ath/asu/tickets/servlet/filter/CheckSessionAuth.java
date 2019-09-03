@@ -1,4 +1,4 @@
-package ru.ath.asu.servlet.filter;
+package ru.ath.asu.tickets.servlet.filter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

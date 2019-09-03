@@ -1,0 +1,27 @@
+<html>
+<head>
+    <meta name="decorator" content="atl.admin"/>
+    <meta name="admin.active.section" content="admin_plugins_menu/setup-hide-button"/>
+##    $webResourceManager.requireResource("com.atlassian.auiplugin:aui-buttons")
+##    $webResourceManager.requireResourcesForContext("com.atlassian.auiplugin:message")
+    $webResourceManager.requireResourcesForContext("custui")
+</head>
+
+<body>
+
+    <h2>Настройка значений по умолчанию при создании заявок</h2>
+
+    <form class="aui" method="post" action="TicketSetupAction!default.jspa">
+        <div class="field-group">
+            <label for="projectid">Проект<span class="aui-icon icon-required"> required</span></label>
+            <input class="text" type="text" id="projectid" name="projectid" title="projectid">
+
+            <div class="description">Идентификатор проекта для заявок пользователей</div>
+        </div>
+    </form>
+
+
+
+</body>
+
+</html>

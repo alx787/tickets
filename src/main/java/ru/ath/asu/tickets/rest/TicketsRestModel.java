@@ -1,4 +1,4 @@
-package ru.ath.asu.rest;
+package ru.ath.asu.tickets.rest;
 
 import javax.xml.bind.annotation.*;
 @XmlRootElement(name = "message")

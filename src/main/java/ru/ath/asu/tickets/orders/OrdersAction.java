@@ -1,4 +1,4 @@
-package ru.ath.asu.orders;
+package ru.ath.asu.tickets.orders;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
