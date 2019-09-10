@@ -11,12 +11,47 @@
 
     <h2>Настройка значений по умолчанию при создании заявок</h2>
 
-    <form class="aui" method="post" action="TicketSetupAction!default.jspa">
+    <form class="aui" method="post" action="TicketSetupAction!save.jspa">
         <div class="field-group">
-            <label for="projectid">Проект<span class="aui-icon icon-required"> required</span></label>
-            <input class="text" type="text" id="projectid" name="projectid" title="projectid">
+            <label for="projectKey">Проект<span class="aui-icon icon-required"> required</span></label>
+            <input class="text" type="text" id="projectKey" name="projectKey" value="$projectKey">
 
             <div class="description">Идентификатор проекта для заявок пользователей</div>
+        </div>
+
+        <div class="field-group">
+            <label for="reporterDefault">Автор задачи<span class="aui-icon icon-required"> required</span></label>
+            <input class="text" type="text" id="reporterDefault" name="reporterDefault"  value="$reporterDefault">
+
+            <div class="description">Автор задачи по умолчанию</div>
+        </div>
+
+        <div class="field-group">
+            <label for="usernameFieldId">Поле имя пользователя<span class="aui-icon icon-required"> required</span></label>
+            <input class="text" type="text" id="usernameFieldId" name="usernameFieldId" value="$usernameFieldId">
+
+            <div class="description">Идентификатор поля ИМЯ ПОЛЬЗОВАТЕЛЯ (цифровой))</div>
+        </div>
+
+        <div class="field-group">
+            <label for="useremailFieldId">Поле email пользователя<span class="aui-icon icon-required"> required</span></label>
+            <input class="text" type="text" id="useremailFieldId" name="useremailFieldId" value="$useremailFieldId">
+
+            <div class="description">Идентификатор поля EMAIL ПОЛЬЗОВАТЕЛЯ (цифровой))</div>
+        </div>
+
+        <div class="field-group">
+            <label for="userdepartFieldId">Поле подразделение пользователя<span class="aui-icon icon-required"> required</span></label>
+            <input class="text" type="text" id="userdepartFieldId" name="userdepartFieldId" value="$userdepartFieldId">
+
+            <div class="description">Идентификатор поля ПОДРАЗДЕЛЕНИЕ ПОЛЬЗОВАТЕЛЯ (цифровой))</div>
+        </div>
+
+        <div class="buttons-container">
+            <div class="buttons">
+                <input class="button submit" type="submit" value="Сохранить" id="comment-save-button" />
+            ##                <a class="cancel" href="#">Cancel</a>
+            </div>
         </div>
     </form>
 

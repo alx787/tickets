@@ -1,29 +1,40 @@
 package ru.ath.asu.tickets.rest;
 
 import com.atlassian.jira.bc.issue.IssueService;
+import com.atlassian.jira.bc.issue.search.SearchService;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.*;
 import com.atlassian.jira.issue.attachment.CreateAttachmentParamsBean;
+import com.atlassian.jira.issue.search.SearchException;
+import com.atlassian.jira.issue.search.SearchResults;
+import com.atlassian.jira.jql.builder.JqlQueryBuilder;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.user.ApplicationUser;
+import com.atlassian.jira.web.bean.PagerFilter;
 import com.atlassian.jira.web.util.AttachmentException;
 import com.atlassian.plugins.rest.common.multipart.FilePart;
 import com.atlassian.plugins.rest.common.multipart.MultipartFormParam;
 import com.atlassian.plugins.rest.common.security.AnonymousAllowed;
 import com.atlassian.jira.project.Project;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.atlassian.query.Query;
+import com.atlassian.query.order.SortOrder;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.ath.asu.tickets.settings.PluginSettingsServiceTickets;
+import ru.ath.asu.tickets.settings.PluginSettingsServiceTools;
 
 import java.io.*;
 import java.util.List;
@@ -37,7 +48,12 @@ import java.util.Map;
 public class TicketsRest {
 
     private static final Logger log = LoggerFactory.getLogger(TicketsRest.class);
+    private final PluginSettingsServiceTickets pluginSettingService;
 
+    @Inject
+    public TicketsRest(PluginSettingsServiceTickets pluginSettingService) {
+        this.pluginSettingService = pluginSettingService;
+    }
 
     @POST
     @AnonymousAllowed
@@ -132,8 +148,6 @@ public class TicketsRest {
         // определится с именем исполнителя
         // имя исполнителя всегда админ или ответственный сотрудник - его надо будет указать при настройке
         ApplicationUser assignUser = ComponentAccessor.getUserManager().getUserByName(authorUserName);
-
-
 
 //        ApplicationUser assignUser = userManager.getUserByName("authorUserName");
 
@@ -264,7 +278,89 @@ public class TicketsRest {
 
         Gson gsonToStr = new Gson();
         return Response.ok(gsonToStr.toJson(jsonObject)).build();
-
 //        return Response.ok("[]").build();
     }
+
+    @GET
+    @AnonymousAllowed
+    @Produces({MediaType.APPLICATION_JSON})
+//    @Consumes({MediaType.APPLICATION_JSON})
+    @Path("/gettickets/{status}/{page}")
+    public Response getTickets(@Context HttpServletRequest request,
+                               @PathParam("status") String status,
+                               @PathParam("page") String page) {
+
+
+        HttpSession session = request.getSession(false);
+        if ((session != null) && (!session.isNew())) {
+            String sessUser = (String) session.getAttribute("user");
+            String sessToken = (String) session.getAttribute("token");
+
+            log.warn(" ======== ");
+            log.warn(" sess user from rest:  " + sessUser);
+            log.warn(" sess token from rest: " + sessToken);
+        } else {
+            log.warn(" sess user from rest:  not found");
+
+        }
+
+
+        log.warn("status: " + status);
+        log.warn("page: " + page);
+
+        String cfg = pluginSettingService.getConfigJson();
+
+        if ((cfg == null) || (cfg.isEmpty())) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("setup error").build();
+        }
+
+        log.warn(cfg);
+
+        String projectKey = PluginSettingsServiceTools.getValueFromSettingsCfg(cfg, "projectKey");
+
+        Project project = ComponentAccessor.getProjectManager().getProjectObjByKey(projectKey);
+
+        if (project == null) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("project not found").build();
+        }
+
+
+        String authorUserName = "admin";
+        ApplicationUser authorUser = ComponentAccessor.getUserManager().getUserByName(authorUserName);
+
+        JiraAuthenticationContext jAC = ComponentAccessor.getJiraAuthenticationContext();
+        jAC.setLoggedInUser(authorUser);
+
+
+        JqlQueryBuilder builder = JqlQueryBuilder.newBuilder();
+        builder.where().project(project.getId());
+        builder.orderBy().issueKey(SortOrder.DESC);
+
+        Query query = builder.buildQuery();
+//        SearchService searchService = ComponentAccessor
+
+
+        SearchResults results = null;
+        try {
+            results = ComponentAccessor.getComponentOfType(SearchService.class).search(jAC.getLoggedInUser(), query, PagerFilter.getUnlimitedFilter());
+        } catch (SearchException e) {
+            e.printStackTrace();
+        }
+
+        log.warn(" ======= issues list from rest =======");
+        for (Issue oneIssue : results.getIssues()) {
+            log.warn("issue: " + oneIssue.getKey() + " - " + oneIssue.getSummary());
+        }
+
+        return Response.ok("[]").build();
+
+
+    }
+
+
+
+
+
+
+
 }
