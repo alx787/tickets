@@ -1,5 +1,7 @@
 package ru.ath.asu.tickets.setup;
 
+import com.atlassian.jira.component.ComponentAccessor;
+import com.atlassian.jira.config.properties.APKeys;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
@@ -30,6 +32,8 @@ public class TicketSetupAction extends JiraWebActionSupport
     private String usernameFieldId;
     private String useremailFieldId;
     private String userdepartFieldId;
+    private String portalUrl;
+
 
 
     @Inject
@@ -51,6 +55,7 @@ public class TicketSetupAction extends JiraWebActionSupport
         usernameFieldId = "";
         useremailFieldId = "";
         userdepartFieldId = "";
+        portalUrl = "";
 
         String cfg = pluginSettingService.getConfigJson();
 
@@ -67,6 +72,9 @@ public class TicketSetupAction extends JiraWebActionSupport
         usernameFieldId = PluginSettingsServiceTools.getValueFromSettingsCfg(cfg, "usernameFieldId");
         useremailFieldId = PluginSettingsServiceTools.getValueFromSettingsCfg(cfg, "useremailFieldId");
         userdepartFieldId = PluginSettingsServiceTools.getValueFromSettingsCfg(cfg, "userdepartFieldId");
+        portalUrl = ComponentAccessor.getApplicationProperties().getString(APKeys.JIRA_BASEURL) + "/secure/portalAction!default.jspa";
+
+//        log.warn("======= " + portalUrl);
 
         return SUCCESS;
     }
@@ -147,4 +155,13 @@ public class TicketSetupAction extends JiraWebActionSupport
     public void setUserdepartFieldId(String userdepartFieldId) {
         this.userdepartFieldId = userdepartFieldId;
     }
+
+    public String getPortalUrl() {
+        return portalUrl;
+    }
+
+    public void setPortalUrl(String portalUrl) {
+        this.portalUrl = portalUrl;
+    }
+
 }

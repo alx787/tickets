@@ -4,7 +4,7 @@
     <meta name="admin.active.section" content="admin_plugins_menu/setup-hide-button"/>
 ##    $webResourceManager.requireResource("com.atlassian.auiplugin:aui-buttons")
 ##    $webResourceManager.requireResourcesForContext("com.atlassian.auiplugin:message")
-    $webResourceManager.requireResourcesForContext("custui")
+##    $webResourceManager.requireResourcesForContext("custui")
 </head>
 
 <body>
@@ -55,6 +55,10 @@
         </div>
     </form>
 
+
+    <div style="margin-top: 20px;">
+        Перейти на портал по <a target="_blank" href="$portalUrl">ссылке</a>
+    </div>
 
 
 </body>
