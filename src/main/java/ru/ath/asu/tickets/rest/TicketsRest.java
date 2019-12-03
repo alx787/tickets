@@ -7,6 +7,7 @@ import com.atlassian.jira.issue.*;
 import com.atlassian.jira.issue.attachment.CreateAttachmentParamsBean;
 import com.atlassian.jira.issue.search.SearchException;
 import com.atlassian.jira.issue.search.SearchResults;
+import com.atlassian.jira.jql.builder.JqlClauseBuilder;
 import com.atlassian.jira.jql.builder.JqlQueryBuilder;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.user.ApplicationUser;
@@ -37,6 +38,8 @@ import ru.ath.asu.tickets.settings.PluginSettingsServiceTickets;
 import ru.ath.asu.tickets.settings.PluginSettingsServiceTools;
 
 import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -174,6 +177,7 @@ public class TicketsRest {
 //        issueInputParameters.addCustomFieldValue("customfield_10001", tUserEmail);
 //        issueInputParameters.addCustomFieldValue("customfield_10002", tUserDepart);
 //        issueInputParameters.addCustomFieldValue("customfield_10000", tUserName);
+//        issueInputParameters.addCustomFieldValue("customfield_10000", tFullUserName);
 
 
         JiraAuthenticationContext jAC = ComponentAccessor.getJiraAuthenticationContext();
@@ -281,20 +285,31 @@ public class TicketsRest {
 //        return Response.ok("[]").build();
     }
 
+
+    // http://localhost:2990/jira/rest/exploretickets/1.0/service/gettickets/{status}/{page}
+    // поле status принимает два значения inprogress и done
     @GET
     @AnonymousAllowed
     @Produces({MediaType.APPLICATION_JSON})
 //    @Consumes({MediaType.APPLICATION_JSON})
-    @Path("/gettickets/{status}/{page}")
+    @Path("/gettickets/{status}/{page}/{datefirst}/{datelast}/{issuenum}")
     public Response getTickets(@Context HttpServletRequest request,
                                @PathParam("status") String status,
-                               @PathParam("page") String page) {
+                               @PathParam("page") String sPage,
+                               @PathParam("datefirst") String sDateFirst,
+                               @PathParam("datelast") String sDateLast,
+                               @PathParam("issuenum") String issuenum)  {
 
 
         HttpSession session = request.getSession(false);
+
+        String sessUser = "";
+        String sessToken = "";
+
+
         if ((session != null) && (!session.isNew())) {
-            String sessUser = (String) session.getAttribute("user");
-            String sessToken = (String) session.getAttribute("token");
+            sessUser = (String) session.getAttribute("user");
+            sessToken = (String) session.getAttribute("token");
 
             log.warn(" ======== ");
             log.warn(" sess user from rest:  " + sessUser);
@@ -304,9 +319,78 @@ public class TicketsRest {
 
         }
 
+        log.warn("============ rest parameters ============");
 
         log.warn("status: " + status);
-        log.warn("page: " + page);
+        log.warn("page: " + sPage);
+
+        log.warn("datefirst: " + sDateFirst);
+        log.warn("datelast: " + sDateLast);
+
+        log.warn("issuenum: " + issuenum);
+
+        log.warn("============ ============");
+
+        ////////////////////////////////////////
+        // проверка статуса на заполненность
+        if ((status == null) || status.equals("")) {
+            return Response.ok("{\"status\":\"error\", \"description\":\"issue status empty\"}").build();
+        }
+
+        if (!(status.equals("open") || status.equals("done"))) {
+            return Response.ok("{\"status\":\"error\", \"description\":\"issue status wrong\"}").build();
+        }
+        ////////////////////////////////////////
+
+        ////////////////////////////////////////
+        // проверка номера страницы
+        try {
+            Integer.parseInt(sPage);
+        } catch (Exception e) {
+            return Response.ok("[]").build();
+        }
+
+        int iPage = Integer.parseInt(sPage);
+        ////////////////////////////////////////
+
+        ////////////////////////////////////////
+        // проверка даты начала и даты окончания
+
+        // дата в формате 2019-12-03
+        Date dDateFirst = null;
+        Date dDateLast = null;
+
+        try {
+            dDateFirst = new SimpleDateFormat("yyyy-MM-dd").parse(sDateFirst);
+        } catch (Exception e) {
+
+        }
+
+        try {
+            dDateLast = new SimpleDateFormat("yyyy-MM-dd").parse(sDateLast);
+        } catch (Exception e) {
+
+        }
+
+        // проверка
+        if (dDateFirst == null) {
+            log.warn("dDateFirst: null");
+
+        } else {
+            log.warn("dDateFirst: " + dDateFirst.toString());
+        }
+
+        if (dDateLast == null) {
+            log.warn("dDateLast: null");
+
+        } else {
+            log.warn("dDateLast: " + dDateLast.toString());
+        }
+
+        ////////////////////////////////////////
+
+
+
 
         String cfg = pluginSettingService.getConfigJson();
 
@@ -317,6 +401,17 @@ public class TicketsRest {
         log.warn(cfg);
 
         String projectKey = PluginSettingsServiceTools.getValueFromSettingsCfg(cfg, "projectKey");
+        String usernameFieldId = PluginSettingsServiceTools.getValueFromSettingsCfg(cfg, "usernameFieldId");
+
+        Long uFielfId = 0L;
+
+        try {
+            uFielfId = Long.valueOf(usernameFieldId);
+        } catch (Exception e) {
+            return Response.ok("{\"status\":\"error\", \"description\":\"bad username field id <" + usernameFieldId + ">\"}").build();
+        }
+
+
 
         Project project = ComponentAccessor.getProjectManager().getProjectObjByKey(projectKey);
 
@@ -332,11 +427,46 @@ public class TicketsRest {
         jAC.setLoggedInUser(authorUser);
 
 
-        JqlQueryBuilder builder = JqlQueryBuilder.newBuilder();
-        builder.where().project(project.getId());
-        builder.orderBy().issueKey(SortOrder.DESC);
+        JqlQueryBuilder queryBuilder = JqlQueryBuilder.newBuilder();
+
+        JqlClauseBuilder builder = queryBuilder.orderBy().issueKey(SortOrder.DESC).endOrderBy().where().project(project.getId()).and().customField(Long.valueOf(usernameFieldId)).like(sessUser);
+
+        if (status.equals("open")) {
+            builder.sub();
+            builder.and().status("Open").or().status("In Progress");
+            builder.endsub();
+        }
+
+        if (status.equals("done")) {
+            builder.and().status("Done");
+        }
+
+        if (dDateFirst != null) {
+            builder.and().created().gtEq(dDateFirst);
+        }
+
+        if (dDateLast != null) {
+            builder.and().created().ltEq(dDateLast);
+        }
+
+        if (issuenum != null) {
+            try {
+                Long lIssueKey = Long.valueOf(issuenum);
+                builder.and().issue().eq(lIssueKey);
+            } catch (Exception e) {
+
+            }
+        }
+
+        builder.endWhere();
+
 
         Query query = builder.buildQuery();
+
+//        Query query = builder.where().project(projectKey).and().created().gt(dDateFirst).or().created().lt(dDateLast).and() buildQuery();
+
+
+
 //        SearchService searchService = ComponentAccessor
 
 
