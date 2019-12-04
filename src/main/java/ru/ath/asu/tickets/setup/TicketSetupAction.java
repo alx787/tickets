@@ -21,15 +21,17 @@ public class TicketSetupAction extends JiraWebActionSupport
     private final PluginSettingsServiceTickets pluginSettingService;
 
     // содержимое json для настроек
-    // ProjectCode
-    // DefailtReporterName
-    // FieldIdUserName
-    // FieldIdUserEmail
-    // FieldIdUserDepart
+    // ProjectCode - код проекта
+    // DefailtReporterName - автор проекта по умолчанию (пользователь jira)
+    // FieldIdUserName - логин пользователя автора заявки
+    // FieldIdUserFullName - фио пользователя автора заявки
+    // FieldIdUserEmail - эл почта пользователя автора заявки
+    // FieldIdUserDepart - подразделение пользователя автора заявки
 
     private String projectKey;
     private String reporterDefault;
     private String usernameFieldId;
+    private String userFullNameFieldId;
     private String useremailFieldId;
     private String userdepartFieldId;
     private String portalUrl;
@@ -53,6 +55,7 @@ public class TicketSetupAction extends JiraWebActionSupport
         projectKey = "";
         reporterDefault = "";
         usernameFieldId = "";
+        userFullNameFieldId = "";
         useremailFieldId = "";
         userdepartFieldId = "";
         portalUrl = "";
@@ -70,6 +73,7 @@ public class TicketSetupAction extends JiraWebActionSupport
         projectKey = PluginSettingsServiceTools.getValueFromSettingsCfg(cfg, "projectKey");
         reporterDefault = PluginSettingsServiceTools.getValueFromSettingsCfg(cfg, "reporterDefault");
         usernameFieldId = PluginSettingsServiceTools.getValueFromSettingsCfg(cfg, "usernameFieldId");
+        userFullNameFieldId = PluginSettingsServiceTools.getValueFromSettingsCfg(cfg, "userFullNameFieldId");
         useremailFieldId = PluginSettingsServiceTools.getValueFromSettingsCfg(cfg, "useremailFieldId");
         userdepartFieldId = PluginSettingsServiceTools.getValueFromSettingsCfg(cfg, "userdepartFieldId");
         portalUrl = ComponentAccessor.getApplicationProperties().getString(APKeys.JIRA_BASEURL) + "/secure/portalAction!default.jspa";
@@ -89,21 +93,30 @@ public class TicketSetupAction extends JiraWebActionSupport
         };
 
 
-        if (projectKey != null) {
-        params.addProperty("reporterDefault", reporterDefault);
+        if (reporterDefault != null) {
+            params.addProperty("reporterDefault", reporterDefault);
         } else {
-            params.addProperty("projectKey", "");
+            params.addProperty("reporterDefault", "");
         };
+
         if (usernameFieldId != null) {
             params.addProperty("usernameFieldId", usernameFieldId);
         } else {
             params.addProperty("usernameFieldId", "");
         };
+
+        if (userFullNameFieldId != null) {
+            params.addProperty("userFullNameFieldId", usernameFieldId);
+        } else {
+            params.addProperty("userFullNameFieldId", "");
+        };
+
         if (useremailFieldId != null) {
             params.addProperty("useremailFieldId", useremailFieldId);
         } else {
             params.addProperty("useremailFieldId", "");
         };
+
         if (userdepartFieldId != null) {
             params.addProperty("userdepartFieldId", userdepartFieldId);
         } else {
@@ -164,4 +177,11 @@ public class TicketSetupAction extends JiraWebActionSupport
         this.portalUrl = portalUrl;
     }
 
+    public String getUserFullNameFieldId() {
+        return userFullNameFieldId;
+    }
+
+    public void setUserFullNameFieldId(String userFullNameFieldId) {
+        this.userFullNameFieldId = userFullNameFieldId;
+    }
 }

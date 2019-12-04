@@ -34,6 +34,9 @@ import com.google.gson.JsonObject;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.ath.asu.tickets.auth.AuthContextConfiguration;
+import ru.ath.asu.tickets.auth.AuthTools;
+import ru.ath.asu.tickets.auth.UserInfo;
 import ru.ath.asu.tickets.settings.PluginSettingsServiceTickets;
 import ru.ath.asu.tickets.settings.PluginSettingsServiceTools;
 
@@ -74,7 +77,41 @@ public class TicketsRest {
     {
 
 
-        // -- план --
+//        String sessUser = "";
+//        String sessToken = "";
+//
+//
+//        if ((session != null) && (!session.isNew())) {
+//            sessUser = (String) session.getAttribute("user");
+//            sessToken = (String) session.getAttribute("token");
+//
+//            log.warn(" ======== ");
+//            log.warn(" sess user from rest:  " + sessUser);
+//            log.warn(" sess token from rest: " + sessToken);
+//        } else {
+//            log.warn(" sess user from rest:  not found");
+//
+//        }
+//
+//
+//        UserInfo userInfo = AuthTools.authenticate(sessUser, sessToken);
+
+        UserInfo userInfo = AuthTools.authenticateFromSession(request.getSession(false));
+
+
+        String cfg = pluginSettingService.getConfigJson();
+
+        if ((cfg == null) || (cfg.isEmpty())) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("setup error").build();
+        }
+
+//        log.warn(cfg);
+
+//        String projectKey = PluginSettingsServiceTools.getValueFromSettingsCfg(cfg, "projectKey");
+
+
+
+                // -- план --
         // + 1 получить проект
         // + 2 получить тему и текст
         // + 3 получить вложения (будем получать после создания задачи и прикреплять по одному)
@@ -143,8 +180,9 @@ public class TicketsRest {
 
         // определится с именем автора
         // имя автора будет пока не использовано, в качестве автора будет имя админской учетки
-        String authorEmail = "admin@admin.com";
-        String authorUserName = "admin";
+//        String authorEmail = "admin@admin.com";
+        String authorUserName = PluginSettingsServiceTools.getValueFromSettingsCfg(cfg,"reporterDefault");
+
         ApplicationUser authorUser = ComponentAccessor.getUserManager().getUserByName(authorUserName);
 //        ApplicationUser authorUser = userManager.getUserByName("authorUserName");
 
@@ -173,7 +211,14 @@ public class TicketsRest {
         issueInputParameters.setAssigneeId(assignUser.getKey());
 
 
+
         // значения дополнительных полей - надо будет обязательно проверку
+        issueInputParameters.addCustomFieldValue(PluginSettingsServiceTools.getValueFromSettingsCfg(cfg,"useremailFieldId"), userInfo.getEmail());
+        issueInputParameters.addCustomFieldValue(PluginSettingsServiceTools.getValueFromSettingsCfg(cfg,"userdepartFieldId"), userInfo.getDepartment());
+        issueInputParameters.addCustomFieldValue(PluginSettingsServiceTools.getValueFromSettingsCfg(cfg,"usernameFieldId"), userInfo.getLogin());
+        issueInputParameters.addCustomFieldValue(PluginSettingsServiceTools.getValueFromSettingsCfg(cfg,"userFullNameFieldId"), userInfo.getFio());
+
+
 //        issueInputParameters.addCustomFieldValue("customfield_10001", tUserEmail);
 //        issueInputParameters.addCustomFieldValue("customfield_10002", tUserDepart);
 //        issueInputParameters.addCustomFieldValue("customfield_10000", tUserName);
@@ -301,22 +346,29 @@ public class TicketsRest {
                                @PathParam("issuenum") String issuenum)  {
 
 
-        HttpSession session = request.getSession(false);
+//        HttpSession session = request.getSession(false);
+//
+//        String sessUser = "";
+//        String sessToken = "";
+//
+//
+//        if ((session != null) && (!session.isNew())) {
+//            sessUser = (String) session.getAttribute("user");
+//            sessToken = (String) session.getAttribute("token");
+//
+//            log.warn(" ======== ");
+//            log.warn(" sess user from rest:  " + sessUser);
+//            log.warn(" sess token from rest: " + sessToken);
+//        } else {
+//            log.warn(" sess user from rest:  not found");
+//
+//        }
 
-        String sessUser = "";
-        String sessToken = "";
 
+        UserInfo userInfo = AuthTools.authenticateFromSession(request.getSession(false));
 
-        if ((session != null) && (!session.isNew())) {
-            sessUser = (String) session.getAttribute("user");
-            sessToken = (String) session.getAttribute("token");
-
-            log.warn(" ======== ");
-            log.warn(" sess user from rest:  " + sessUser);
-            log.warn(" sess token from rest: " + sessToken);
-        } else {
-            log.warn(" sess user from rest:  not found");
-
+        if (userInfo.getLogin() == null) {
+            return Response.ok("{\"status\":\"error\", \"description\":\"wrong username or password\"}").build();
         }
 
         log.warn("============ rest parameters ============");
@@ -402,6 +454,7 @@ public class TicketsRest {
 
         String projectKey = PluginSettingsServiceTools.getValueFromSettingsCfg(cfg, "projectKey");
         String usernameFieldId = PluginSettingsServiceTools.getValueFromSettingsCfg(cfg, "usernameFieldId");
+        String reporterName = PluginSettingsServiceTools.getValueFromSettingsCfg(cfg, "reporterDefault");
 
         Long uFielfId = 0L;
 
@@ -416,12 +469,13 @@ public class TicketsRest {
         Project project = ComponentAccessor.getProjectManager().getProjectObjByKey(projectKey);
 
         if (project == null) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("project not found").build();
+//            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("project not found").build();
+            return Response.ok("{\"status\":\"error\", \"description\":\"project with key = " + projectKey + " not found\"}").build();
         }
 
 
-        String authorUserName = "admin";
-        ApplicationUser authorUser = ComponentAccessor.getUserManager().getUserByName(authorUserName);
+//        String authorUserName = "admin";
+        ApplicationUser authorUser = ComponentAccessor.getUserManager().getUserByName(reporterName);
 
         JiraAuthenticationContext jAC = ComponentAccessor.getJiraAuthenticationContext();
         jAC.setLoggedInUser(authorUser);
@@ -429,7 +483,7 @@ public class TicketsRest {
 
         JqlQueryBuilder queryBuilder = JqlQueryBuilder.newBuilder();
 
-        JqlClauseBuilder builder = queryBuilder.orderBy().issueKey(SortOrder.DESC).endOrderBy().where().project(project.getId()).and().customField(Long.valueOf(usernameFieldId)).like(sessUser);
+        JqlClauseBuilder builder = queryBuilder.orderBy().issueKey(SortOrder.DESC).endOrderBy().where().project(project.getId()).and().customField(Long.valueOf(usernameFieldId)).like(userInfo.getLogin());
 
         if (status.equals("open")) {
             builder.sub();

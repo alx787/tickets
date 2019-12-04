@@ -3,19 +3,31 @@ package ru.ath.asu.tickets.portal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
+import ru.ath.asu.tickets.auth.AuthUserInfo;
 //import org.springframework.beans.factory.annotation.Qualifier;
 
 //import javax.inject.Inject;
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 
+@Named
 public class PortalAction extends JiraWebActionSupport
 {
     private static final Logger log = LoggerFactory.getLogger(PortalAction.class);
 
     private String userName;
 
+
+//    private AuthUserInfo authUserInfo;
+
+
+//    @Inject
+//    public PortalAction(AuthUserInfo authUserInfo) {
+//        this.authUserInfo = authUserInfo;
+//    }
 
     @Override
     public String execute() throws Exception {
