@@ -27,28 +27,28 @@
         </div>
 
         <div class="field-group">
-            <label for="usernameFieldId">Поле имя пользователя<span class="aui-icon icon-required"> required</span></label>
+            <label for="usernameFieldId">Поле ИМЯ ПОЛЬЗОВАТЕЛЯ (логин))<span class="aui-icon icon-required"> required</span></label>
             <input class="text" type="text" id="usernameFieldId" name="usernameFieldId" value="$usernameFieldId">
 
             <div class="description">Идентификатор поля ИМЯ ПОЛЬЗОВАТЕЛЯ (цифровой))</div>
         </div>
 
         <div class="field-group">
-            <label for="userFullNameFieldId">Поле полное имя пользователя<span class="aui-icon icon-required"> required</span></label>
+            <label for="userFullNameFieldId">Поле ПОЛНОЕ ИМЯ ПОЛЬЗОВАТЕЛЯ (фио))<span class="aui-icon icon-required"> required</span></label>
             <input class="text" type="text" id="userFullNameFieldId" name="userFullNameFieldId" value="$userFullNameFieldId">
 
             <div class="description">Идентификатор поля ПОЛНОГО ИМЕНИ ПОЛЬЗОВАТЕЛЯ (цифровой))</div>
         </div>
 
         <div class="field-group">
-            <label for="useremailFieldId">Поле email пользователя<span class="aui-icon icon-required"> required</span></label>
+            <label for="useremailFieldId">Поле EMAIL ПОЛЬЗОВАТЕЛЯ<span class="aui-icon icon-required"> required</span></label>
             <input class="text" type="text" id="useremailFieldId" name="useremailFieldId" value="$useremailFieldId">
 
             <div class="description">Идентификатор поля EMAIL ПОЛЬЗОВАТЕЛЯ (цифровой))</div>
         </div>
 
         <div class="field-group">
-            <label for="userdepartFieldId">Поле подразделение пользователя<span class="aui-icon icon-required"> required</span></label>
+            <label for="userdepartFieldId">Поле ПОДРАЗДЕЛЕНИЕ ПОЛЬЗОВАТЕЛЯ<span class="aui-icon icon-required"> required</span></label>
             <input class="text" type="text" id="userdepartFieldId" name="userdepartFieldId" value="$userdepartFieldId">
 
             <div class="description">Идентификатор поля ПОДРАЗДЕЛЕНИЕ ПОЛЬЗОВАТЕЛЯ (цифровой))</div>
@@ -64,7 +64,7 @@
 
 
     <div style="margin-top: 20px;">
-        Перейти на портал по <a target="_blank" href="$portalUrl">ссылке</a>
+        Перейти на страницу заявок по <a target="_blank" href="$portalUrl">ссылке</a>
     </div>
 
 

@@ -9,6 +9,9 @@ import com.atlassian.jira.issue.search.SearchException;
 import com.atlassian.jira.issue.search.SearchResults;
 import com.atlassian.jira.jql.builder.JqlClauseBuilder;
 import com.atlassian.jira.jql.builder.JqlQueryBuilder;
+
+//import com.atlassian.jira.jql.builder.DefaultJqlClauseBuilder;
+
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.web.bean.PagerFilter;
@@ -29,6 +32,7 @@ import javax.ws.rs.core.Response;
 import com.atlassian.query.Query;
 import com.atlassian.query.order.SortOrder;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import org.apache.commons.io.IOUtils;
@@ -41,6 +45,7 @@ import ru.ath.asu.tickets.settings.PluginSettingsServiceTickets;
 import ru.ath.asu.tickets.settings.PluginSettingsServiceTools;
 
 import java.io.*;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -122,7 +127,8 @@ public class TicketsRest {
 
 
         // 1 получить проект
-        Project project = ComponentAccessor.getProjectManager().getProjectObjByKey("ZVK");
+        String projectKey = PluginSettingsServiceTools.getValueFromSettingsCfg(cfg,"projectKey");
+        Project project = ComponentAccessor.getProjectManager().getProjectObjByKey(projectKey);
 //        Project project = projectManager.getProjectObjByKey("ZVK");
 
         // 2 получить тему и текст
@@ -182,7 +188,6 @@ public class TicketsRest {
         // имя автора будет пока не использовано, в качестве автора будет имя админской учетки
 //        String authorEmail = "admin@admin.com";
         String authorUserName = PluginSettingsServiceTools.getValueFromSettingsCfg(cfg,"reporterDefault");
-
         ApplicationUser authorUser = ComponentAccessor.getUserManager().getUserByName(authorUserName);
 //        ApplicationUser authorUser = userManager.getUserByName("authorUserName");
 
@@ -213,10 +218,18 @@ public class TicketsRest {
 
 
         // значения дополнительных полей - надо будет обязательно проверку
-        issueInputParameters.addCustomFieldValue(PluginSettingsServiceTools.getValueFromSettingsCfg(cfg,"useremailFieldId"), userInfo.getEmail());
-        issueInputParameters.addCustomFieldValue(PluginSettingsServiceTools.getValueFromSettingsCfg(cfg,"userdepartFieldId"), userInfo.getDepartment());
-        issueInputParameters.addCustomFieldValue(PluginSettingsServiceTools.getValueFromSettingsCfg(cfg,"usernameFieldId"), userInfo.getLogin());
-        issueInputParameters.addCustomFieldValue(PluginSettingsServiceTools.getValueFromSettingsCfg(cfg,"userFullNameFieldId"), userInfo.getFio());
+        String fieldId;
+        fieldId = "customfield_" + PluginSettingsServiceTools.getValueFromSettingsCfg(cfg,"useremailFieldId");
+        issueInputParameters.addCustomFieldValue(fieldId, userInfo.getEmail());
+
+        fieldId = "customfield_" + PluginSettingsServiceTools.getValueFromSettingsCfg(cfg,"userdepartFieldId");
+        issueInputParameters.addCustomFieldValue(fieldId, userInfo.getDepartment());
+
+        fieldId = "customfield_" + PluginSettingsServiceTools.getValueFromSettingsCfg(cfg,"usernameFieldId");
+        issueInputParameters.addCustomFieldValue(fieldId, userInfo.getLogin());
+
+        fieldId = "customfield_" + PluginSettingsServiceTools.getValueFromSettingsCfg(cfg,"userFullNameFieldId");
+        issueInputParameters.addCustomFieldValue(fieldId, userInfo.getFio());
 
 
 //        issueInputParameters.addCustomFieldValue("customfield_10001", tUserEmail);
@@ -331,7 +344,16 @@ public class TicketsRest {
     }
 
 
-    // http://localhost:2990/jira/rest/exploretickets/1.0/service/gettickets/{status}/{page}
+    // http://localhost:2990/jira/rest/exploretickets/1.0/service/gettickets/{status}/{page}/{datefirst}/{datelast}/{issuenum}
+
+    // параметры
+
+//    status - статус задачи open или done
+//    page - номер страницы
+//    datefirst - дата начала периода в формате yyyy-MM-dd
+//    datelast - дата начала периода в формате yyyy-MM-dd
+//    issuenum - номер задачи
+
     // поле status принимает два значения inprogress и done
     @GET
     @AnonymousAllowed
@@ -419,7 +441,17 @@ public class TicketsRest {
         }
 
         try {
+
+            // смещаем дату окончания на конец дня
+
             dDateLast = new SimpleDateFormat("yyyy-MM-dd").parse(sDateLast);
+
+            Timestamp ts = new Timestamp(dDateLast.getTime());
+            ts.setTime(ts.getTime() + 24 * 60 * 60 * 1000);
+
+            dDateLast = new Date(ts.getTime());
+
+
         } catch (Exception e) {
 
         }
@@ -486,8 +518,9 @@ public class TicketsRest {
         JqlClauseBuilder builder = queryBuilder.orderBy().issueKey(SortOrder.DESC).endOrderBy().where().project(project.getId()).and().customField(Long.valueOf(usernameFieldId)).like(userInfo.getLogin());
 
         if (status.equals("open")) {
+            builder.and();
             builder.sub();
-            builder.and().status("Open").or().status("In Progress");
+            builder.status("To Do").or().status("Open").or().status("In Progress");
             builder.endsub();
         }
 
@@ -505,8 +538,9 @@ public class TicketsRest {
 
         if (issuenum != null) {
             try {
-                Long lIssueKey = Long.valueOf(issuenum);
-                builder.and().issue().eq(lIssueKey);
+                Long.valueOf(issuenum);
+//                builder.and().issue().eq(lIssueKey);
+                builder.and().issue().eq(projectKey + "-" + issuenum);
             } catch (Exception e) {
 
             }
@@ -531,20 +565,56 @@ public class TicketsRest {
             e.printStackTrace();
         }
 
+        log.warn(" ======= JQL query =======");
+//        log.warn(((DefaultJqlClauseBuilder) queryBuilder.jqlClauseBuilder).builder.toString());
+        log.warn(query.toString());
+
         log.warn(" ======= issues list from rest =======");
+
+
+        ///////////////////////////////////////////////
+        // сформируем ответ в виде json
+        JsonObject jsonRestAnswer = new JsonObject();
+        jsonRestAnswer.addProperty("status", "ok");
+
+        JsonArray jsonIssuesArray = new JsonArray();
+
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+
         for (Issue oneIssue : results.getIssues()) {
             log.warn("issue: " + oneIssue.getKey() + " - " + oneIssue.getSummary());
+
+            JsonObject jsonIssue = new JsonObject();
+
+            if (oneIssue.getCreated() != null) {
+                jsonIssue.addProperty("createdate", dateFormat.format(oneIssue.getCreated()));
+            } else {
+                jsonIssue.addProperty("createdate", "");
+            }
+
+            jsonIssue.addProperty("number", oneIssue.getNumber());
+            jsonIssue.addProperty("summary", oneIssue.getSummary());
+            jsonIssue.addProperty("description", oneIssue.getDescription());
+            jsonIssue.addProperty("status", oneIssue.getStatus().getName());
+
+            if (oneIssue.getDueDate() != null) {
+                jsonIssue.addProperty("duedate", dateFormat.format(oneIssue.getDueDate()));
+            } else {
+                jsonIssue.addProperty("duedate", "-");
+            }
+
+
+            jsonIssuesArray.add(jsonIssue);
         }
 
-        return Response.ok("[]").build();
+        jsonRestAnswer.add("issues", jsonIssuesArray);
 
+        Gson gson = new Gson();
+
+
+        return Response.ok(gson.toJson(jsonRestAnswer)).build();
 
     }
-
-
-
-
-
-
 
 }

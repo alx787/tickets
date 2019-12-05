@@ -106,7 +106,7 @@ public class TicketSetupAction extends JiraWebActionSupport
         };
 
         if (userFullNameFieldId != null) {
-            params.addProperty("userFullNameFieldId", usernameFieldId);
+            params.addProperty("userFullNameFieldId", userFullNameFieldId);
         } else {
             params.addProperty("userFullNameFieldId", "");
         };
