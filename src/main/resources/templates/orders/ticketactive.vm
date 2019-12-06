@@ -166,6 +166,15 @@ $webResourceManager.requireResource("com.atlassian.auiplugin:dialog2")
                     <tbody>
 
                         <tr>
+                            <td class="order-created">20.05.2019</td>
+                            <td class="order-number">00129</td>
+                            <td class="order-descr">Подключение удаленного рабочего стола с пасьянсом Паук и пасьянсом косынка и сапером еще1</td>
+                            <td class="order-status">В работе</td>
+                            <td class="order-duedate">20.05.2019</td>
+
+                        </tr>
+
+                        <tr>
                             <td style="padding: 5px 10px; width: 80px; text-align: center">20.05.2019</td>
                             <td style="padding: 5px 10px; width: 80px; text-align: center">00129</td>
                             <td style="padding: 5px 10px;width: 380px;white-space: nowrap;text-overflow:  ellipsis; overflow-x:  hidden;">Подключение удаленного рабочего стола с пасьянсом Паук и пасьянсом косынка и сапером еще</td>

@@ -8,6 +8,10 @@ public class AuthTools {
 
         UserInfo userInfo = new UserInfo();
 
+        if (username == null || password == null) {
+            return userInfo;
+        }
+
         if (username.equals("alx") && password.equals("123")) {
 
             userInfo.setLogin(username);

@@ -350,9 +350,9 @@ public class TicketsRest {
 
 //    status - статус задачи open или done
 //    page - номер страницы
-//    datefirst - дата начала периода в формате yyyy-MM-dd
-//    datelast - дата начала периода в формате yyyy-MM-dd
-//    issuenum - номер задачи
+//    datefirst - дата начала периода в формате yyyy-MM-dd, если пустое значение то -
+//    datelast - дата начала периода в формате yyyy-MM-dd, если пустое значение то -
+//    issuenum - номер задачи, если пустое значение то -
 
     // поле status принимает два значения inprogress и done
     @GET
@@ -389,7 +389,7 @@ public class TicketsRest {
 
         UserInfo userInfo = AuthTools.authenticateFromSession(request.getSession(false));
 
-        if (userInfo.getLogin() == null) {
+        if (userInfo.getLogin().equals("")) {
             return Response.ok("{\"status\":\"error\", \"description\":\"wrong username or password\"}").build();
         }
 
@@ -421,10 +421,14 @@ public class TicketsRest {
         try {
             Integer.parseInt(sPage);
         } catch (Exception e) {
-            return Response.ok("[]").build();
+            return Response.ok("{\"status\":\"error\", \"description\":\"wrong page number\"}").build();
         }
 
         int iPage = Integer.parseInt(sPage);
+
+        if (iPage <= 0) {
+            return Response.ok("{\"status\":\"error\", \"description\":\"wrong page number\"}").build();
+        }
         ////////////////////////////////////////
 
         ////////////////////////////////////////
@@ -434,26 +438,27 @@ public class TicketsRest {
         Date dDateFirst = null;
         Date dDateLast = null;
 
-        try {
-            dDateFirst = new SimpleDateFormat("yyyy-MM-dd").parse(sDateFirst);
-        } catch (Exception e) {
+        if (!sDateFirst.equals("-")) {
+            try {
+                dDateFirst = new SimpleDateFormat("yyyy-MM-dd").parse(sDateFirst);
+            } catch (Exception e) {
 
+            }
         }
 
-        try {
+        if (!sDateLast.equals("-")) {
+            try {
+                // смещаем дату окончания на конец дня
+                dDateLast = new SimpleDateFormat("yyyy-MM-dd").parse(sDateLast);
 
-            // смещаем дату окончания на конец дня
+                Timestamp ts = new Timestamp(dDateLast.getTime());
+                ts.setTime(ts.getTime() + 24 * 60 * 60 * 1000);
 
-            dDateLast = new SimpleDateFormat("yyyy-MM-dd").parse(sDateLast);
+                dDateLast = new Date(ts.getTime());
 
-            Timestamp ts = new Timestamp(dDateLast.getTime());
-            ts.setTime(ts.getTime() + 24 * 60 * 60 * 1000);
+            } catch (Exception e) {
 
-            dDateLast = new Date(ts.getTime());
-
-
-        } catch (Exception e) {
-
+            }
         }
 
         // проверка
@@ -537,12 +542,15 @@ public class TicketsRest {
         }
 
         if (issuenum != null) {
-            try {
-                Long.valueOf(issuenum);
-//                builder.and().issue().eq(lIssueKey);
-                builder.and().issue().eq(projectKey + "-" + issuenum);
-            } catch (Exception e) {
 
+            if (!issuenum.equals("-")) {
+                try {
+                    Long.valueOf(issuenum);
+//                  builder.and().issue().eq(lIssueKey);
+                    builder.and().issue().eq(projectKey + "-" + issuenum);
+                } catch (Exception e) {
+
+                }
             }
         }
 
@@ -559,10 +567,19 @@ public class TicketsRest {
 
 
         SearchResults results = null;
+
         try {
-            results = ComponentAccessor.getComponentOfType(SearchService.class).search(jAC.getLoggedInUser(), query, PagerFilter.getUnlimitedFilter());
+            // используется для ограничения количества выводимых страниц
+            // параметры new PagerFilter(int start, int max)
+            // start - номер позиции с которой будет вывод в результате
+            // max - количество выводимых позиций
+            PagerFilter pagerFilter = new PagerFilter((iPage - 1) * 10, 10);
+
+            results = ComponentAccessor.getComponentOfType(SearchService.class).search(jAC.getLoggedInUser(), query, pagerFilter);
+
         } catch (SearchException e) {
             e.printStackTrace();
+            return Response.ok("{\"status\":\"error\", \"description\":\"exception in query\"}").build();
         }
 
         log.warn(" ======= JQL query =======");
@@ -576,6 +593,7 @@ public class TicketsRest {
         // сформируем ответ в виде json
         JsonObject jsonRestAnswer = new JsonObject();
         jsonRestAnswer.addProperty("status", "ok");
+        jsonRestAnswer.addProperty("total", results.getTotal());
 
         JsonArray jsonIssuesArray = new JsonArray();
 
