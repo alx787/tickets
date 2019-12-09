@@ -574,6 +574,7 @@ public class TicketsRest {
             // start - номер позиции с которой будет вывод в результате
             // max - количество выводимых позиций
             PagerFilter pagerFilter = new PagerFilter((iPage - 1) * 10, 10);
+//            PagerFilter pagerFilter = new PagerFilter(0, 2);
 
             results = ComponentAccessor.getComponentOfType(SearchService.class).search(jAC.getLoggedInUser(), query, pagerFilter);
 
@@ -588,12 +589,17 @@ public class TicketsRest {
 
         log.warn(" ======= issues list from rest =======");
 
+        log.warn(" ======= total pages =======");
+        log.warn(String.valueOf(results.getPages().size()));
+        log.warn(String.valueOf(results.getTotal()));
+
 
         ///////////////////////////////////////////////
         // сформируем ответ в виде json
         JsonObject jsonRestAnswer = new JsonObject();
         jsonRestAnswer.addProperty("status", "ok");
         jsonRestAnswer.addProperty("total", results.getTotal());
+        jsonRestAnswer.addProperty("pages", results.getPages().size());
 
         JsonArray jsonIssuesArray = new JsonArray();
 
