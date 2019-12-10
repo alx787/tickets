@@ -600,6 +600,7 @@ public class TicketsRest {
         jsonRestAnswer.addProperty("status", "ok");
         jsonRestAnswer.addProperty("total", results.getTotal());
         jsonRestAnswer.addProperty("pages", results.getPages().size());
+        jsonRestAnswer.addProperty("currPage", iPage);
 
         JsonArray jsonIssuesArray = new JsonArray();
 

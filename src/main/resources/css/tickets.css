@@ -57,3 +57,7 @@ table {
     width: 80px;
     text-align: left;
 }
+
+#paginator li {
+    padding: 0 10px 0 10px;
+}

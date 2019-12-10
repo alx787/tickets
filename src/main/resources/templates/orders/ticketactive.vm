@@ -201,29 +201,19 @@ $webResourceManager.requireResource("com.atlassian.auiplugin:dialog2")
         </div>
 
 
-        <div style="margin-top: 20px ;text-align: center">
+        <div id="paginator" style="margin-top: 20px ;text-align: center">
             <ol class="aui-nav aui-nav-pagination">
-                <li class="aui-nav-first"><a href="#"><---</a></li>
-                <li class="aui-nav-previous"><a href="#"><</a></li>
-                <li><a href="#">1</a></li>
-##                <li class="aui-nav-selected">2</li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
+                <li style="cursor: pointer; padding: 0 10px 0 10px" class="aui-nav-first"><---</li>
+                <li style="cursor: pointer; padding: 0 10px 0 10px" class="aui-nav-previous"><</li>
 
-##                <li class="aui-nav-truncation"><a href="#" id="pagination-truncation">&hellip;</a></li>
-                <li class="aui-nav-truncation"> ... </li>
-                <li><a href="#">501</a></li>
+                <li style="padding: 0 10px 0 10px">Страница</li>
 
-                <li><input value="502" style="width: 40px; border: none; text-align: center; font-weight: bold;" /></li>
+                <li style="padding: 0 10px 0 10px"><input name="currpage" value="502" style="width: 40px; border: none; text-align: center; font-weight: bold;" /></li>
 
-                <li><a href="#">503</a></li>
-##                <li class="aui-nav-truncation"><a href="#" id="pagination-truncation">&hellip;</a></li>
-                <li class="aui-nav-truncation"> ... </li>
+                <li style="padding: 0 10px 0 10px">/ 503</li>
 
-                <li><a href="#">998</a></li>
-                <li><a href="#">999</a></li>
-                <li class="aui-nav-next"><a href="#">></a></li>
-                <li class="aui-nav-last"><a href="#">---></a></li>
+                <li style="cursor: pointer; padding: 0 10px 0 10px" class="aui-nav-next">></li>
+                <li style="cursor: pointer; padding: 0 10px 0 10px" class="aui-nav-last">---></li>
             </ol>
         </div>
 

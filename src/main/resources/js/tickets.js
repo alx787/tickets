@@ -8,6 +8,24 @@ tickets.module = (function () {
         return true;
     }
 
+
+    /////////////////////////////////////////////////////////
+    // текущий номер страницы - глобальная переменная
+    var currPage = 0;
+
+    var setCurrPage = function (pageNum) {
+        if (isNaN(pageNum)) {
+            //currPage = 0;
+        } else {
+            currPage = pageNum;
+        }
+    }
+
+    var getCurrPage = function () {
+        return currPage;
+    }
+
+
     /////////////////////////////////////////////////////////
     // получить заполнить строку
     var renderRow = function (created, number, descr, status, duedate) {
@@ -41,6 +59,10 @@ tickets.module = (function () {
 
         var dataLength = jsonData.issues.length;
 
+        // если количество возвратных данных больше нуля то заменяем тек.страницу на новую
+        setCurrPage(jsonData.currPage);
+        //setCurrPage(101);
+
         for (var i = 0; i < dataLength; i++) {
             var oneRow = renderRow(jsonData.issues[i].createdate,
                                     jsonData.issues[i].number,
@@ -60,6 +82,12 @@ tickets.module = (function () {
     var fillTable = function (status, page, datefirst, datelast, issuenum) {
 
         var sIssueNum = issuenum;
+
+        // проверка того что page является числом
+        if(isNaN(page)) {
+            return false;
+        }
+
 
         if (sIssueNum == null || sIssueNum === "") {
             sIssueNum = "-";
@@ -86,25 +114,6 @@ tickets.module = (function () {
                     refreshDataInTable(data);
                 }
 
-
-                //
-                // for (var i = 0; i < dataLength; i++) {
-                //
-                //     rowStr = rowTemplate.replace("__objectId__", "attachsign_" + data[i].id);
-                //     rowStr = rowStr.replace("__object__", data[i].name);
-                //     rowStr = rowStr.replace("__status__", "&nbsp;");
-                //
-                //     tableObj.append(rowStr);
-                //
-                //
-                //     rows = AJS.$("div#signDetailDiv ul li");
-                //     AJS.$(rows[rows.size() - 1]).find(".sign-bthcheck button").bind("click", function() {
-                //         getSignForObject(this);
-                //     });
-                //
-                //
-                // }
-                //
             },
             error: function(data) {
                 // var myFlag = AJS.flag({
@@ -115,11 +124,8 @@ tickets.module = (function () {
             },
         });
 
-
         return true;
-
     }
-
 
 
 
@@ -127,7 +133,9 @@ tickets.module = (function () {
 
     return {
         helloWorld:helloWorld,
-        fillTale:fillTable,
+        fillTable:fillTable,
+        setCurrPage:setCurrPage,
+        getCurrPage:getCurrPage,
     }
 
 }())
@@ -151,6 +159,38 @@ AJS.$(document).ready(function() {
         AJS.dialog2("#demo-dialog").hide();
     });
 
+    ///////////////////////////////////////
+    // обработка событий пагинатора
+    AJS.$("#paginator li.aui-nav-first").click(function (e) {
+        console.log("<---");
+    });
+
+    AJS.$("#paginator li.aui-nav-previous").click(function (e) {
+        console.log("<");
+    });
+
+    AJS.$("#paginator li.aui-nav-next").click(function (e) {
+        console.log(">");
+    });
+
+    AJS.$("#paginator li.aui-nav-last").click(function (e) {
+        console.log("--->");
+    });
+
+    AJS.$("#paginator input[name='currpage']").keypress(function(event) {
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if(keycode == '13'){
+            console.log("enter detected");
+        }
+    });
+
+
     // заполнение таблицы заявками
-    //fillTable("open", 1, "-", "-", "-");
+    // status, page, datefirst, datelast, issuenum
+    tickets.module.fillTable("open", 1, "-", "-", "-");
+
+    // общая схема такова
+    // при нажатии на кнопку, получаем номер страницы и его отправляем в рест
+    // если запрос выполнился и вернул строки то устанавливаем новый номер страницы в модуле и из него устанавливаем номер страницы в UI
+    // если запрос ничего не вернул то ничего не меняем, оставляем все без изменений
 });
