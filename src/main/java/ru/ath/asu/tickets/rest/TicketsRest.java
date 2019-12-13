@@ -16,6 +16,7 @@ import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.web.bean.PagerFilter;
 import com.atlassian.jira.web.util.AttachmentException;
+import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.atlassian.plugins.rest.common.multipart.FilePart;
 import com.atlassian.plugins.rest.common.multipart.MultipartFormParam;
 import com.atlassian.plugins.rest.common.security.AnonymousAllowed;
@@ -61,9 +62,13 @@ public class TicketsRest {
     private static final Logger log = LoggerFactory.getLogger(TicketsRest.class);
     private final PluginSettingsServiceTickets pluginSettingService;
 
+    @ComponentImport
+    private final IssueManager issueManager;
+
     @Inject
-    public TicketsRest(PluginSettingsServiceTickets pluginSettingService) {
+    public TicketsRest(PluginSettingsServiceTickets pluginSettingService, IssueManager issueManager) {
         this.pluginSettingService = pluginSettingService;
+        this.issueManager = issueManager;
     }
 
     @POST
@@ -641,5 +646,47 @@ public class TicketsRest {
         return Response.ok(gson.toJson(jsonRestAnswer)).build();
 
     }
+
+
+
+    @GET
+    @AnonymousAllowed
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/getticketinfo/{issuenum}")
+    public Response getTicketInfo(@Context HttpServletRequest request, @PathParam("issuenum") String issuenum)  {
+
+
+        UserInfo userInfo = AuthTools.authenticateFromSession(request.getSession(false));
+
+        if (userInfo.getLogin().equals("")) {
+            return Response.ok("{\"status\":\"error\", \"description\":\"wrong username or password\"}").build();
+        }
+
+
+        if ((issuenum == null) || (issuenum.equals(""))) {
+            return Response.ok("[]").build();
+        }
+
+        String cfg = pluginSettingService.getConfigJson();
+        String projectKey = PluginSettingsServiceTools.getValueFromSettingsCfg(cfg,"projectKey");
+
+        MutableIssue mutableIssue = issueManager.getIssueObject(projectKey + "-" + issuenum);
+
+        if (mutableIssue == null) {
+            return Response.ok("{\"status\":\"error\", \"description\":\"issue not found\"}").build();
+        }
+
+        JsonObject jsonRestAnswer = new JsonObject();
+        jsonRestAnswer.addProperty("status", "ok");
+
+        jsonRestAnswer.addProperty("summary", mutableIssue.getSummary());
+        jsonRestAnswer.addProperty("description", mutableIssue.getDescription());
+
+        Gson gson = new Gson();
+
+        return Response.ok(gson.toJson(jsonRestAnswer)).build();
+
+    }
+
 
 }

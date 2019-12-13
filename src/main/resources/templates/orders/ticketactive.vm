@@ -18,7 +18,7 @@ $webResourceManager.requireResource("com.atlassian.auiplugin:dialog2")
 
     <div class="aui-dialog2-content">
         <div style="padding: 5px;">
-            <span style="font-weight: bold">Подключение удаленного рабочего стола с пасьянсом Паук</span>
+            <span id="popupHeader" style="font-weight: bold">Подключение удаленного рабочего стола с пасьянсом Паук</span>
         </div>
 
         <div style="margin-top: 10px; padding: 5px;">
@@ -92,6 +92,7 @@ $webResourceManager.requireResource("com.atlassian.auiplugin:dialog2")
 
         <div style="float: right">
             <p>
+                <button  class="aui-button aui-button-primary" onclick="window.location.href = 'ordersAction!menu.jspa';">Меню</button>
                 <button  class="aui-button aui-button-primary" onclick="window.location.href = 'portalAction!default.jspa';">Выход</button>
             </p>
         </div>
@@ -190,7 +191,8 @@ $webResourceManager.requireResource("com.atlassian.auiplugin:dialog2")
 
                 <li style="padding: 0 10px 0 10px"><input name="currpage" value="502" style="width: 40px; border: none; text-align: center; font-weight: bold;" /></li>
 
-                <li style="padding: 0 10px 0 10px">/ 503</li>
+                <li style="padding: 0 10px 0 10px"> / </li>
+                <li id="total-cnt" style="padding: 0 10px 0 10px">503</li>
 
                 <li style="cursor: pointer; padding: 0 10px 0 10px" class="aui-nav-next">></li>
                 <li style="cursor: pointer; padding: 0 10px 0 10px" class="aui-nav-last">---></li>

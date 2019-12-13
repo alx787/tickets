@@ -14,12 +14,16 @@ tickets.module = (function () {
 
     // текущий номер страницы
     var currPage = 0;
+    // максимальный номер страницы
+    var maxPage = 0;
     // заявки open или done
     var orderStatus = "";
 
 
     /////////////////////////////////////////////////////////
     // геттеры и сеттеры глобальных переменных
+
+    //
     var setCurrPage = function (pageNum) {
         if (isNaN(pageNum)) {
             //currPage = 0;
@@ -32,6 +36,12 @@ tickets.module = (function () {
         return currPage;
     }
 
+    //
+    var getMaxPage = function () {
+        return maxPage;
+    }
+
+    //
     var setCurrStatus = function (newCurrStatus) {
         currStatus = newCurrStatus;
     }
@@ -39,6 +49,7 @@ tickets.module = (function () {
     var getCurrStatus = function () {
         return currStatus;
     }
+
     /////////////////////////////////////////////////////////
     // получить заполнить строку
     var renderRow = function (created, number, summary, status, duedate) {
@@ -62,6 +73,46 @@ tickets.module = (function () {
 
 
     /////////////////////////////////////////////////////////
+    // показать окно с описанием задачи
+    var showPopupWindow = function (issueId) {
+        AJS.$.ajax({
+            url: AJS.params.baseURL + "/rest/exploretickets/1.0/service/getticketinfo/" + issueId,
+            type: 'get',
+            dataType: 'json',
+            // data: JSON.stringify(jsonObj),
+            // async: false,
+            // async: true,
+            contentType: "application/json; charset=utf-8",
+            success: function(data) {
+
+                // var dataLength = data.length;
+                // var strMess = "";
+
+                console.log(data);
+                //
+                // if (data.status == "ok") {
+                //     console.log("ok");
+                //     refreshDataInTable(data);
+                // }
+
+                AJS.$("#popupHeader").text(data.summary);
+
+                AJS.dialog2("#demo-dialog").show();
+
+
+            },
+            error: function(data) {
+                // var myFlag = AJS.flag({
+                //     type: 'error',
+                //     body: 'Ошибка загрузки',
+                // });
+
+            },
+        });
+
+    }
+
+    /////////////////////////////////////////////////////////
     // получить заполнить строку
     var refreshDataInTable = function (jsonData) {
         var dataLength = jsonData.issues.length;
@@ -81,6 +132,8 @@ tickets.module = (function () {
         setCurrPage(jsonData.currPage);
         // тут же обновим номер страницы
         AJS.$("input[name='currpage']").val(jsonData.currPage);
+        AJS.$("#total-cnt").text(jsonData.pages);
+        maxPage = jsonData.pages;
         // и количество страниц всего
 
         //setCurrPage(101);
@@ -95,7 +148,48 @@ tickets.module = (function () {
             tableObj.append(oneRow);
         }
 
+        // назначим события на нажатие на строку
+        AJS.$("#ticketsFromUsers tr").each(function (indx) {
+            AJS.$(this).click(function (e) {
+
+                // тут надо заполнить поля в инфо окне через ajax
+                //console.log(AJS.$(this).find(".order-number").text());
+                // console.log(e);
+                // console.log(this);
+
+                e.preventDefault();
+                // AJS.dialog2("#demo-dialog").show();
+
+                var issueId = AJS.$(this).find(".order-number").text();
+                showPopupWindow(issueId);
+
+            })
+        });
+
+        // Hides the dialog
+        AJS.$("#dialog-submit-button").click(function (e) {
+            e.preventDefault();
+            AJS.dialog2("#demo-dialog").hide();
+        });
+
     }
+
+
+
+    // Shows the dialog when the "Show dialog" button is clicked
+    //AJS.$("#dialog-show-button").click(function(e) {
+    // AJS.$(AJS.$("#ticketsFromUsers tr")[0]).click(function(e) {
+    //     e.preventDefault();
+    //     AJS.dialog2("#demo-dialog").show();
+    // });
+
+    // Hides the dialog
+    // AJS.$("#dialog-submit-button").click(function (e) {
+    //     e.preventDefault();
+    //     AJS.dialog2("#demo-dialog").hide();
+    // });
+
+
 
 
     /////////////////////////////////////////////////////////
@@ -182,6 +276,7 @@ tickets.module = (function () {
         setCurrStatus:setCurrStatus,
         getCurrStatus:getCurrStatus,
         getFilterParameters:getFilterParameters,
+        getMaxPage:getMaxPage,
     }
 
 }())
@@ -194,16 +289,16 @@ AJS.$(document).ready(function() {
 
     // Shows the dialog when the "Show dialog" button is clicked
     //AJS.$("#dialog-show-button").click(function(e) {
-    AJS.$(AJS.$("#ticketsFromUsers tr")[0]).click(function(e) {
-        e.preventDefault();
-        AJS.dialog2("#demo-dialog").show();
-    });
+    // AJS.$(AJS.$("#ticketsFromUsers tr")[0]).click(function(e) {
+    //     e.preventDefault();
+    //     AJS.dialog2("#demo-dialog").show();
+    // });
 
     // Hides the dialog
-    AJS.$("#dialog-submit-button").click(function (e) {
-        e.preventDefault();
-        AJS.dialog2("#demo-dialog").hide();
-    });
+    // AJS.$("#dialog-submit-button").click(function (e) {
+    //     e.preventDefault();
+    //     AJS.dialog2("#demo-dialog").hide();
+    // });
 
     ///////////////////////////////////////
     // обработка событий пагинатора
@@ -234,6 +329,11 @@ AJS.$(document).ready(function() {
 
     AJS.$("#paginator li.aui-nav-next").click(function (e) {
         var currPageNumber = tickets.module.getCurrPage();
+        var maxPageNumber = tickets.module.getMaxPage();
+
+        if (currPageNumber + 1 > maxPageNumber) {
+            return false;
+        }
 
         var params = tickets.module.getFilterParameters();
         tickets.module.fillTable(currPageNumber + 1, params.datefirst, params.datelast, params.issuenum);
@@ -242,6 +342,10 @@ AJS.$(document).ready(function() {
     });
 
     AJS.$("#paginator li.aui-nav-last").click(function (e) {
+        var maxPageNumber = tickets.module.getMaxPage();
+        var params = tickets.module.getFilterParameters();
+        tickets.module.fillTable(maxPageNumber, params.datefirst, params.datelast, params.issuenum);
+
         console.log("--->");
     });
 
