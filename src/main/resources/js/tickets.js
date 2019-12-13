@@ -10,9 +10,16 @@ tickets.module = (function () {
 
 
     /////////////////////////////////////////////////////////
-    // текущий номер страницы - глобальная переменная
-    var currPage = 0;
+    // глобальные переменные
 
+    // текущий номер страницы
+    var currPage = 0;
+    // заявки open или done
+    var orderStatus = "";
+
+
+    /////////////////////////////////////////////////////////
+    // геттеры и сеттеры глобальных переменных
     var setCurrPage = function (pageNum) {
         if (isNaN(pageNum)) {
             //currPage = 0;
@@ -25,14 +32,20 @@ tickets.module = (function () {
         return currPage;
     }
 
+    var setCurrStatus = function (newCurrStatus) {
+        currStatus = newCurrStatus;
+    }
 
+    var getCurrStatus = function () {
+        return currStatus;
+    }
     /////////////////////////////////////////////////////////
     // получить заполнить строку
-    var renderRow = function (created, number, descr, status, duedate) {
+    var renderRow = function (created, number, summary, status, duedate) {
         var rowTemplate = '<tr>'
                             + '<td class="order-created">__created__</td>'
                             + '<td class="order-number">__number__</td>'
-                            + '<td class="order-descr">__descr__/td>'
+                            + '<td class="order-descr">__summary__</td>'
                             + '<td class="order-status">__status__</td>'
                             + '<td class="order-duedate">__duedate__</td>'
                         + '</tr>';
@@ -40,7 +53,7 @@ tickets.module = (function () {
         var rowStr = rowTemplate;
         rowStr = rowStr.replace("__created__", created);
         rowStr = rowStr.replace("__number__", number);
-        rowStr = rowStr.replace("__descr__", descr);
+        rowStr = rowStr.replace("__summary__", summary);
         rowStr = rowStr.replace("__status__", status);
         rowStr = rowStr.replace("__duedate__", duedate);
 
@@ -51,22 +64,31 @@ tickets.module = (function () {
     /////////////////////////////////////////////////////////
     // получить заполнить строку
     var refreshDataInTable = function (jsonData) {
+        var dataLength = jsonData.issues.length;
+
+        if (dataLength == 0) {
+            return false;
+        }
+
         // таблица объект
         var tableObj = AJS.$("#ticketsFromUsers");
 
         // очистим строки таблицы
         AJS.$("#ticketsFromUsers tr").remove();
 
-        var dataLength = jsonData.issues.length;
 
         // если количество возвратных данных больше нуля то заменяем тек.страницу на новую
         setCurrPage(jsonData.currPage);
+        // тут же обновим номер страницы
+        AJS.$("input[name='currpage']").val(jsonData.currPage);
+        // и количество страниц всего
+
         //setCurrPage(101);
 
         for (var i = 0; i < dataLength; i++) {
             var oneRow = renderRow(jsonData.issues[i].createdate,
                                     jsonData.issues[i].number,
-                                    jsonData.issues[i].description,
+                                    jsonData.issues[i].summary,
                                     jsonData.issues[i].status,
                                     jsonData.issues[i].duedate);
 
@@ -76,10 +98,9 @@ tickets.module = (function () {
     }
 
 
-
     /////////////////////////////////////////////////////////
     // заполнение таблицы данными с сервера
-    var fillTable = function (status, page, datefirst, datelast, issuenum) {
+    var fillTable = function (page, datefirst, datelast, issuenum) {
 
         var sIssueNum = issuenum;
 
@@ -95,7 +116,7 @@ tickets.module = (function () {
 
 
         AJS.$.ajax({
-            url: AJS.params.baseURL + "/rest/exploretickets/1.0/service/gettickets/" + status + "/" + page + "/" + datefirst + "/" + datelast + "/" + sIssueNum,
+            url: AJS.params.baseURL + "/rest/exploretickets/1.0/service/gettickets/" + currStatus + "/" + page + "/" + datefirst + "/" + datelast + "/" + sIssueNum,
             type: 'get',
             dataType: 'json',
             // data: JSON.stringify(jsonObj),
@@ -127,7 +148,29 @@ tickets.module = (function () {
         return true;
     }
 
+    /////////////////////////////////////////////////////////
+    // получить параметры для фильтра
+    var getFilterParameters = function () {
+        var params = {};
 
+        params.datefirst = AJS.$("#date-begin").val();
+        params.datelast = AJS.$("#date-end").val();
+        params.issuenum = AJS.$("input[name='ticket-number']").val();
+
+        if (params.datefirst == "") {
+            params.datefirst = "-"
+        };
+
+        if (params.datelast == "") {
+            params.datelast = "-"
+        };
+
+        if (params.issuenum == "") {
+            params.issuenum = "-"
+        };
+
+        return params;
+    }
 
 
 
@@ -136,6 +179,9 @@ tickets.module = (function () {
         fillTable:fillTable,
         setCurrPage:setCurrPage,
         getCurrPage:getCurrPage,
+        setCurrStatus:setCurrStatus,
+        getCurrStatus:getCurrStatus,
+        getFilterParameters:getFilterParameters,
     }
 
 }())
@@ -162,14 +208,36 @@ AJS.$(document).ready(function() {
     ///////////////////////////////////////
     // обработка событий пагинатора
     AJS.$("#paginator li.aui-nav-first").click(function (e) {
+        var currPageNumber = tickets.module.getCurrPage();
+        if (currPageNumber == 1) {
+            return false;
+        }
+
+        var params = tickets.module.getFilterParameters();
+        tickets.module.fillTable(1, params.datefirst, params.datelast, params.issuenum);
+
         console.log("<---");
     });
 
     AJS.$("#paginator li.aui-nav-previous").click(function (e) {
+        var currPageNumber = tickets.module.getCurrPage();
+        if (currPageNumber == 1) {
+            return false;
+        }
+
+        var params = tickets.module.getFilterParameters();
+        tickets.module.fillTable(currPageNumber - 1, params.datefirst, params.datelast, params.issuenum);
+
+
         console.log("<");
     });
 
     AJS.$("#paginator li.aui-nav-next").click(function (e) {
+        var currPageNumber = tickets.module.getCurrPage();
+
+        var params = tickets.module.getFilterParameters();
+        tickets.module.fillTable(currPageNumber + 1, params.datefirst, params.datelast, params.issuenum);
+
         console.log(">");
     });
 
@@ -180,6 +248,11 @@ AJS.$(document).ready(function() {
     AJS.$("#paginator input[name='currpage']").keypress(function(event) {
         var keycode = (event.keyCode ? event.keyCode : event.which);
         if(keycode == '13'){
+
+            var currPageNumber = tickets.module.getCurrPage();
+            var params = tickets.module.getFilterParameters();
+            tickets.module.fillTable(currPageNumber, params.datefirst, params.datelast, params.issuenum);
+
             console.log("enter detected");
         }
     });
@@ -187,7 +260,8 @@ AJS.$(document).ready(function() {
 
     // заполнение таблицы заявками
     // status, page, datefirst, datelast, issuenum
-    tickets.module.fillTable("open", 1, "-", "-", "-");
+    tickets.module.setCurrStatus("open");
+    tickets.module.fillTable(1, "-", "-", "-");
 
     // общая схема такова
     // при нажатии на кнопку, получаем номер страницы и его отправляем в рест
