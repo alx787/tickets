@@ -79,9 +79,6 @@ tickets.module = (function () {
             rowStr = rowStr.replace("__status__", "выполнено");
         }
 
-
-        rowStr = rowStr.replace("__status__", status);
-
         return rowStr;
     }
 
