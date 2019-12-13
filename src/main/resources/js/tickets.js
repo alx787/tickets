@@ -65,8 +65,22 @@ tickets.module = (function () {
         rowStr = rowStr.replace("__created__", created);
         rowStr = rowStr.replace("__number__", number);
         rowStr = rowStr.replace("__summary__", summary);
-        rowStr = rowStr.replace("__status__", status);
         rowStr = rowStr.replace("__duedate__", duedate);
+
+        // перевод поля на русский
+        // rowStr = rowStr.replace("__status__", status);
+        if (status == "To Do") {
+            rowStr = rowStr.replace("__status__", "сделать");
+        }
+        if (status == "In Progress") {
+            rowStr = rowStr.replace("__status__", "выполняется");
+        }
+        if (status == "Done") {
+            rowStr = rowStr.replace("__status__", "выполнено");
+        }
+
+
+        rowStr = rowStr.replace("__status__", status);
 
         return rowStr;
     }
@@ -94,8 +108,9 @@ tickets.module = (function () {
                 //     console.log("ok");
                 //     refreshDataInTable(data);
                 // }
-
-                AJS.$("#popupHeader").text(data.summary);
+                AJS.$("#popupHeader").text("Заявка " + data.number + " от " + data.created);
+                AJS.$("#popupSummary").text(data.summary);
+                AJS.$("#popupDescription").text(data.description);
 
                 AJS.dialog2("#demo-dialog").show();
 
@@ -361,10 +376,21 @@ AJS.$(document).ready(function() {
         }
     });
 
+    // кнопка поиска
+    AJS.$("#searchButton").click(function (e) {
+        var params = tickets.module.getFilterParameters();
+        tickets.module.fillTable(1, params.datefirst, params.datelast, params.issuenum);
+    });
+
+
 
     // заполнение таблицы заявками
     // status, page, datefirst, datelast, issuenum
-    tickets.module.setCurrStatus("open");
+    if (AJS.$("input[name='orders-mode']").val() == "open") {
+        tickets.module.setCurrStatus("open");
+    } else {
+        tickets.module.setCurrStatus("done");
+    }
     tickets.module.fillTable(1, "-", "-", "-");
 
     // общая схема такова

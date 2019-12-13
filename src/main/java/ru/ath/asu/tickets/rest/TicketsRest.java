@@ -359,7 +359,7 @@ public class TicketsRest {
 //    datelast - дата начала периода в формате yyyy-MM-dd, если пустое значение то -
 //    issuenum - номер задачи, если пустое значение то -
 
-    // поле status принимает два значения inprogress и done
+    // поле status принимает два значения open и done
     @GET
     @AnonymousAllowed
     @Produces({MediaType.APPLICATION_JSON})
@@ -676,8 +676,19 @@ public class TicketsRest {
             return Response.ok("{\"status\":\"error\", \"description\":\"issue not found\"}").build();
         }
 
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+
         JsonObject jsonRestAnswer = new JsonObject();
         jsonRestAnswer.addProperty("status", "ok");
+
+        jsonRestAnswer.addProperty("number", mutableIssue.getNumber());
+        jsonRestAnswer.addProperty("created", dateFormat.format(mutableIssue.getCreated()));
+
+        if (mutableIssue.getDueDate() == null) {
+            jsonRestAnswer.addProperty("duedate", "");
+        } else {
+            jsonRestAnswer.addProperty("duedate", dateFormat.format(mutableIssue.getDueDate()));
+        }
 
         jsonRestAnswer.addProperty("summary", mutableIssue.getSummary());
         jsonRestAnswer.addProperty("description", mutableIssue.getDescription());

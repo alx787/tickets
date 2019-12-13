@@ -36,7 +36,7 @@ $webResourceManager.requireResource("ru.ath.asu.tickets:tickets-resources-menu")
         <ul class="ath-main-menu">
             <li><a href="ordersAction!newTicket.jspa">Создать заявку</a></li>
             <li><a href="ordersAction!activeTicket.jspa">Заявки в работе</a></li>
-            <li><a href="https://example.com/">Архив</a></li>
+            <li><a href="ordersAction!archTicket.jspa">Заявки выполненные</a></li>
 
 ##        </ul>
 
