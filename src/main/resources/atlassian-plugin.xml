@@ -76,9 +76,13 @@
     <description key="check-session-auth.description">The Check Session Auth Plugin</description>  
     <!--<url-pattern>secure/portalAction*</url-pattern>-->  
     <url-pattern>/secure/ordersAction*</url-pattern> 
-  </servlet-filter>  
-  <rest name="Tickets Rest" i18n-name-key="tickets-rest.name" key="tickets-rest" path="/exploretickets" version="1.0"> 
+  </servlet-filter>
+  <rest name="Tickets Rest" i18n-name-key="tickets-rest.name" key="tickets-rest" path="/exploretickets" version="1.0">
     <description key="tickets-rest.description">The Tickets Rest Plugin</description> 
-  </rest>  
+  </rest>
+  <ao key="ao-module">
+    <description>ticket users</description>
+    <entity>ru.ath.asu.tickets.aousers.TicketUser</entity>
+  </ao>
 
 </atlassian-plugin>
