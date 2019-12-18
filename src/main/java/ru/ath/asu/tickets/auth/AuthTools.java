@@ -1,6 +1,8 @@
 package ru.ath.asu.tickets.auth;
 
 import javax.servlet.http.HttpSession;
+import java.nio.charset.Charset;
+import java.util.Random;
 
 public class AuthTools {
 
@@ -32,7 +34,6 @@ public class AuthTools {
         String sessUser = "";
         String sessToken = "";
 
-
         if ((session != null) && (!session.isNew())) {
             sessUser = (String) session.getAttribute("user");
             sessToken = (String) session.getAttribute("token");
@@ -44,4 +45,11 @@ public class AuthTools {
 
     }
 
+
+    public static String generateToken() {
+        byte[] array = new byte[10]; // length is bounded by 7
+        new Random().nextBytes(array);
+        String generatedString = new String(array, Charset.forName("UTF-8"));
+        return generatedString;
+    }
 }

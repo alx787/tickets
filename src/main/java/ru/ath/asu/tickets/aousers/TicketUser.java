@@ -7,7 +7,7 @@ import net.java.ao.Mutator;
 import net.java.ao.schema.NotNull;
 import net.java.ao.schema.Table;
 
-@Table("TicketUser")
+@Table("Ticketuser") // если писать в верблюжьей нотации то TicketUser то имя получится TICKET_USER
 public interface TicketUser extends Entity {
     @Accessor("login")
     @NotNull
@@ -40,6 +40,14 @@ public interface TicketUser extends Entity {
     @Mutator("password")
     @NotNull
     public void setPassword(String depart);
+
+    @Accessor("token")
+    @NotNull
+    public String getToken();
+
+    @Mutator("token")
+    @NotNull
+    public void setToken(String depart);
 
 }
 

@@ -1,8 +1,11 @@
 package ru.ath.asu.tickets.portal;
 
+import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
+import ru.ath.asu.tickets.aousers.TicketUser;
+import ru.ath.asu.tickets.aousers.TicketUserDao;
 import ru.ath.asu.tickets.auth.AuthUserInfo;
 //import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -13,21 +16,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 
-@Named
+//@Named
 public class PortalAction extends JiraWebActionSupport
 {
     private static final Logger log = LoggerFactory.getLogger(PortalAction.class);
 
     private String userName;
-
+    private final TicketUserDao ticketUserDao;
 
 //    private AuthUserInfo authUserInfo;
 
 
 //    @Inject
-//    public PortalAction(AuthUserInfo authUserInfo) {
-//        this.authUserInfo = authUserInfo;
-//    }
+    public PortalAction(TicketUserDao ticketUserDao) {
+        this.ticketUserDao = ticketUserDao;
+    }
 
     @Override
     public String execute() throws Exception {
@@ -95,6 +98,11 @@ public class PortalAction extends JiraWebActionSupport
     private boolean checkPass(String login, String password) {
         String uName = "alx";
         String uPass = "123";
+
+
+        // проверка дао
+        TicketUser ticketUser = ticketUserDao.create("alxlogin", "alxusername", "alxdepart", "alxpassword");
+
 
         if (uName.equals(login) && uPass.equals(password)) {
             return true;
