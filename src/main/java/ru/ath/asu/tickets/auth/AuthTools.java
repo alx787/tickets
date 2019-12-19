@@ -1,5 +1,9 @@
 package ru.ath.asu.tickets.auth;
 
+import ru.ath.asu.tickets.aousers.TicketUser;
+import ru.ath.asu.tickets.aousers.TicketUserDao;
+import ru.ath.asu.tickets.aousers.TicketUserDaoImpl;
+
 import javax.servlet.http.HttpSession;
 import java.nio.charset.Charset;
 import java.util.Random;
@@ -29,6 +33,8 @@ public class AuthTools {
     }
 
 
+
+
     public static UserInfo authenticateFromSession(HttpSession session) {
 
         String sessUser = "";
@@ -42,7 +48,15 @@ public class AuthTools {
         }
 
         return new UserInfo();
+    }
 
+
+
+    public static UserInfo getUserInfoFromTicketUser(TicketUser ticketUser) {
+        if (ticketUser != null) {
+            return new UserInfo(String.valueOf(ticketUser.getID()), ticketUser.getEmail(), ticketUser.getLogin(), ticketUser.getUserName(), ticketUser.getDepart(), "", ticketUser.getToken());
+        }
+        return null;
     }
 
 

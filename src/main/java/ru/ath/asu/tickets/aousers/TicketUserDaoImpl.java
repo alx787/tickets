@@ -43,11 +43,12 @@ public class TicketUserDaoImpl implements TicketUserDao {
     }
 
     @Override
-    public TicketUser create(String login, String username, String depart, String password) {
+    public TicketUser create(String login, String username, String email, String depart, String password) {
 
         if (
             (login == null) || login.equals("") ||
             (username == null) || username.equals("") ||
+            (email == null) || email.equals("") ||
             (depart == null) || depart.equals("") ||
             (password == null) || password.equals("")
         ) {
@@ -55,7 +56,14 @@ public class TicketUserDaoImpl implements TicketUserDao {
         }
 
 
-        final TicketUser ticketUser = ao.create(TicketUser.class, new DBParam("LOGIN", login), new DBParam("USERNAME", username), new DBParam("DEPART", depart), new DBParam("PASSWORD", password), new DBParam("TOKEN", "-"));
+        final TicketUser ticketUser = ao.create(TicketUser.class,
+                new DBParam("LOGIN", login),
+                new DBParam("USERNAME", username),
+                new DBParam("EMAIL", email),
+                new DBParam("DEPART", depart),
+                new DBParam("PASSWORD", password),
+                new DBParam("TOKEN", "-")
+        );
         ticketUser.save();
 
         return ticketUser;

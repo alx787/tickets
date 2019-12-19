@@ -25,6 +25,14 @@ public interface TicketUser extends Entity {
     @NotNull
     public void setUserName(String userName);
 
+    @Accessor("email")
+    @NotNull
+    public String getEmail();
+
+    @Mutator("email")
+    @NotNull
+    public void setEmail(String email);
+
     @Accessor("depart")
     @NotNull
     public String getDepart();

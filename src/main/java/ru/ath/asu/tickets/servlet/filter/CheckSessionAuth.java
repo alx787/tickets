@@ -3,6 +3,8 @@ package ru.ath.asu.tickets.servlet.filter;
 //import org.picocontainer.annotations.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.ath.asu.tickets.aousers.TicketUser;
+import ru.ath.asu.tickets.aousers.TicketUserDao;
 import ru.ath.asu.tickets.auth.AuthTools;
 import ru.ath.asu.tickets.auth.AuthUserInfo;
 import ru.ath.asu.tickets.auth.UserInfo;
@@ -18,12 +20,11 @@ import java.io.IOException;
 public class CheckSessionAuth implements Filter{
     private static final Logger log = LoggerFactory.getLogger(CheckSessionAuth.class);
 
-//    private AuthUserInfo authUserInfo;
-//
-//    @Inject
-//    public CheckSessionAuth(AuthUserInfo authUserInfo) {
-//        this.authUserInfo = authUserInfo;
-//    }
+    private TicketUserDao ticketUserDao;
+
+    public CheckSessionAuth(TicketUserDao ticketUserDao) {
+        this.ticketUserDao = ticketUserDao;
+    }
 
     public void init(FilterConfig filterConfig)throws ServletException{
     }
@@ -52,24 +53,29 @@ public class CheckSessionAuth implements Filter{
             log.warn(" sess user from filter:  " + sessUser);
             log.warn(" sess token from filter: " + sessToken);
 
-            if ((sessUser == null) || (sessToken == null)) {
-
+            if (!checkAuth(sessUser, sessToken)) {
                 ((HttpServletResponse)response).sendRedirect("portalAction!auth.jspa");
                 return;
             }
-
-
-            if (!sessUser.equals("alx") && sessToken.equals("123")) {
-//                HttpServletResponse httpResponse =
-
-                log.warn(" ======== ");
-                log.warn(" unsuccessful attempt ");
-
-                ((HttpServletResponse)response).sendRedirect("portalAction!auth.jspa");
-                return;
-
-            }
-
+//
+//            if ((sessUser == null) || (sessToken == null)) {
+//
+//                ((HttpServletResponse)response).sendRedirect("portalAction!auth.jspa");
+//                return;
+//            }
+//
+//
+//            if (!sessUser.equals("alx") && sessToken.equals("123")) {
+////                HttpServletResponse httpResponse =
+//
+//                log.warn(" ======== ");
+//                log.warn(" unsuccessful attempt ");
+//
+//                ((HttpServletResponse)response).sendRedirect("portalAction!auth.jspa");
+//                return;
+//
+//            }
+//
         } else {
             log.warn(" ======== ");
             log.warn(" session not found ");
@@ -80,6 +86,34 @@ public class CheckSessionAuth implements Filter{
 
         //continue the request
         chain.doFilter(request,response);
+    }
+
+    // проверка авторизованности пользователя
+    private boolean checkAuth(String id, String token) {
+        if ((id == null) || (token == null)) {
+            return false;
+        }
+
+        int iId = -1;
+
+        try {
+            iId = Integer.valueOf(id);
+        } catch (Exception e) {
+            return false;
+
+        }
+
+        TicketUser ticketUser = ticketUserDao.findById(iId);
+
+        if (ticketUser == null) {
+            return false;
+        }
+
+        if (token.equals(ticketUser.getToken())) {
+            return true;
+        }
+
+        return false;
     }
 
 }

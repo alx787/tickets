@@ -4,7 +4,7 @@ public interface TicketUserDao {
     TicketUser findById(int id);
     TicketUser[] findByAll();
     TicketUser findByLoginPassword(String login, String password);
-    TicketUser create(String login, String username, String depart, String password);
+    TicketUser create(String login, String username, String email, String depart, String password);
     void update(TicketUser ticketUser);
     void remove(TicketUser ticketUser);
 }

@@ -6,7 +6,9 @@ import org.slf4j.LoggerFactory;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
 import ru.ath.asu.tickets.aousers.TicketUser;
 import ru.ath.asu.tickets.aousers.TicketUserDao;
+import ru.ath.asu.tickets.auth.AuthTools;
 import ru.ath.asu.tickets.auth.AuthUserInfo;
+import ru.ath.asu.tickets.auth.UserInfo;
 //import org.springframework.beans.factory.annotation.Qualifier;
 
 //import javax.inject.Inject;
@@ -70,16 +72,22 @@ public class PortalAction extends JiraWebActionSupport
             loginName = "";
         }
 
+        if (loginPass == null) {
+            loginPass = "";
+        }
+
+
         this.userName = loginName;
 
 
         // проверка логина пароля
-        if (checkPass(loginName, loginPass)) {
+        UserInfo userInfo = tryAuthenticate(loginName, loginPass);
+        if ( userInfo != null) {
 
             HttpServletRequest req = getHttpRequest();
             HttpSession session = req.getSession();
-            session.setAttribute("user", loginName);
-            session.setAttribute("token", loginPass);
+            session.setAttribute("user", userInfo.getId());
+            session.setAttribute("token", userInfo.getToken());
 
 
             log.warn(" ===== авторизовался");
@@ -92,25 +100,23 @@ public class PortalAction extends JiraWebActionSupport
     }
 
 
-
-
-    // здесь проверка логина и пароля
-    private boolean checkPass(String login, String password) {
-        String uName = "alx";
-        String uPass = "123";
-
-
+    // попытка авторизации
+    public UserInfo tryAuthenticate(String login, String password) {
         // проверка дао
-        TicketUser ticketUser = ticketUserDao.create("alxlogin", "alxusername", "alxdepart", "alxpassword");
+        TicketUser ticketUser = ticketUserDao.findByLoginPassword(login, password);
 
+        if (ticketUser != null) {
+            // запишем токен в тикет юзер
+            ticketUser.setToken(AuthTools.generateToken());
+            ticketUserDao.update(ticketUser);
 
-        if (uName.equals(login) && uPass.equals(password)) {
-            return true;
+            return AuthTools.getUserInfoFromTicketUser(ticketUser);
         }
 
-        return false;
-
+        return null;
     }
+
+
 
     public String getUserName() {
         return userName;
