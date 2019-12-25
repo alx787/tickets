@@ -1,12 +1,14 @@
 package ru.ath.asu.tickets.auth;
 
 import ru.ath.asu.tickets.aousers.TicketUser;
-import ru.ath.asu.tickets.aousers.TicketUserDao;
-import ru.ath.asu.tickets.aousers.TicketUserDaoImpl;
+//import ru.ath.asu.tickets.aousers.TicketUserDao;
+//import ru.ath.asu.tickets.aousers.TicketUserDaoImpl;
 
 import javax.servlet.http.HttpSession;
-import java.nio.charset.Charset;
-import java.util.Random;
+//import java.nio.charset.Charset;
+//import java.util.Random;
+
+import java.security.SecureRandom;
 
 public class AuthTools {
 
@@ -61,9 +63,14 @@ public class AuthTools {
 
 
     public static String generateToken() {
-        byte[] array = new byte[10]; // length is bounded by 7
-        new Random().nextBytes(array);
-        String generatedString = new String(array, Charset.forName("UTF-8"));
-        return generatedString;
+//        byte[] array = new byte[10]; // length is bounded by 7
+//        new Random().nextBytes(array);
+//        String generatedString = new String(array, Charset.forName("UTF-8"));
+//
+        SecureRandom random = new SecureRandom();
+
+        long longToken = Math.abs( random.nextLong() );
+        String randomString = Long.toString( longToken, 16 );
+        return randomString;
     }
 }
