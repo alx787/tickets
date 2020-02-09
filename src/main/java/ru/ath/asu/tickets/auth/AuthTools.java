@@ -1,6 +1,8 @@
 package ru.ath.asu.tickets.auth;
 
 import ru.ath.asu.tickets.aousers.TicketUser;
+import ru.ath.asu.tickets.aousers.TicketUserDao;
+import ru.ath.asu.tickets.aousers.TicketUserDaoImpl;
 //import ru.ath.asu.tickets.aousers.TicketUserDao;
 //import ru.ath.asu.tickets.aousers.TicketUserDaoImpl;
 
@@ -12,24 +14,34 @@ import java.security.SecureRandom;
 
 public class AuthTools {
 
-    public static UserInfo authenticateFromUsernamePassword(String username, String password) {
+    public static UserInfo authenticateFromUsernamePassword(TicketUserDao dao, String userId, String token) {
 
         UserInfo userInfo = new UserInfo();
 
-        if (username == null || password == null) {
+        if (userId == null || userId.equals("") || token == null || token.equals("")) {
             return userInfo;
         }
 
-        if (username.equals("alx") && password.equals("123")) {
-
-            userInfo.setLogin(username);
-            userInfo.setFio(username + " " + username + " " + username);
-            userInfo.setEmail(username + "@kiravto.ru");
-            userInfo.setDepartment(username + " depart");
-
+        int id = 0;
+        try {
+            id = Integer.valueOf(userId);
+        } catch (Exception e) {
             return userInfo;
-
         }
+
+        // запрос в AO
+        userInfo = getUserInfoFromTicketUser(dao.findById(id));
+
+//        if (username.equals("alx") && password.equals("123")) {
+//
+//            userInfo.setLogin(username);
+//            userInfo.setFio(username + " " + username + " " + username);
+//            userInfo.setEmail(username + "@kiravto.ru");
+//            userInfo.setDepartment(username + " depart");
+//
+//            return userInfo;
+//
+//        }
 
         return userInfo;
     }
@@ -37,7 +49,7 @@ public class AuthTools {
 
 
 
-    public static UserInfo authenticateFromSession(HttpSession session) {
+    public static UserInfo authenticateFromSession(TicketUserDao dao, HttpSession session) {
 
         String sessUser = "";
         String sessToken = "";
@@ -46,7 +58,7 @@ public class AuthTools {
             sessUser = (String) session.getAttribute("user");
             sessToken = (String) session.getAttribute("token");
 
-            return authenticateFromUsernamePassword(sessUser, sessToken);
+            return authenticateFromUsernamePassword(dao, sessUser, sessToken);
         }
 
         return new UserInfo();

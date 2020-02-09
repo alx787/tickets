@@ -39,6 +39,7 @@ import com.google.gson.JsonObject;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.ath.asu.tickets.aousers.TicketUserDao;
 import ru.ath.asu.tickets.auth.AuthContextConfiguration;
 import ru.ath.asu.tickets.auth.AuthTools;
 import ru.ath.asu.tickets.auth.UserInfo;
@@ -61,14 +62,16 @@ public class TicketsRest {
 
     private static final Logger log = LoggerFactory.getLogger(TicketsRest.class);
     private final PluginSettingsServiceTickets pluginSettingService;
+    private final TicketUserDao ticketUserDao;
 
     @ComponentImport
     private final IssueManager issueManager;
 
     @Inject
-    public TicketsRest(PluginSettingsServiceTickets pluginSettingService, IssueManager issueManager) {
+    public TicketsRest(PluginSettingsServiceTickets pluginSettingService, IssueManager issueManager, TicketUserDao ticketUserDao) {
         this.pluginSettingService = pluginSettingService;
         this.issueManager = issueManager;
+        this.ticketUserDao = ticketUserDao;
     }
 
     @POST
@@ -106,7 +109,7 @@ public class TicketsRest {
 //
 //        UserInfo userInfo = AuthTools.authenticate(sessUser, sessToken);
 
-        UserInfo userInfo = AuthTools.authenticateFromSession(request.getSession(false));
+        UserInfo userInfo = AuthTools.authenticateFromSession(ticketUserDao, request.getSession(false));
 
 
         String cfg = pluginSettingService.getConfigJson();
@@ -392,7 +395,7 @@ public class TicketsRest {
 //        }
 
 
-        UserInfo userInfo = AuthTools.authenticateFromSession(request.getSession(false));
+        UserInfo userInfo = AuthTools.authenticateFromSession(ticketUserDao, request.getSession(false));
 
         if (userInfo.getLogin().equals("")) {
             return Response.ok("{\"status\":\"error\", \"description\":\"wrong username or password\"}").build();
@@ -572,13 +575,19 @@ public class TicketsRest {
 
 
         SearchResults results = null;
+        ////////////////////////////////////////
+        // количество строк в выводимой таблице
+        int cntRows = 20;
+        ////////////////////////////////////////
+
 
         try {
+
             // используется для ограничения количества выводимых страниц
             // параметры new PagerFilter(int start, int max)
             // start - номер позиции с которой будет вывод в результате
             // max - количество выводимых позиций
-            PagerFilter pagerFilter = new PagerFilter((iPage - 1) * 10, 10);
+            PagerFilter pagerFilter = new PagerFilter((iPage - 1) * cntRows, cntRows);
 //            PagerFilter pagerFilter = new PagerFilter(0, 2);
 
             results = ComponentAccessor.getComponentOfType(SearchService.class).search(jAC.getLoggedInUser(), query, pagerFilter);
@@ -656,7 +665,7 @@ public class TicketsRest {
     public Response getTicketInfo(@Context HttpServletRequest request, @PathParam("issuenum") String issuenum)  {
 
 
-        UserInfo userInfo = AuthTools.authenticateFromSession(request.getSession(false));
+        UserInfo userInfo = AuthTools.authenticateFromSession(ticketUserDao, request.getSession(false));
 
         if (userInfo.getLogin().equals("")) {
             return Response.ok("{\"status\":\"error\", \"description\":\"wrong username or password\"}").build();
