@@ -28,6 +28,12 @@
     <resource type="download" name="ticketnew.js" location="/js/ticketnew.js"/>  
     <context>ticketsmenu</context> 
   </web-resource>
+  <web-resource key="tickets-setup" name="tickets setup">
+    <dependency>com.atlassian.auiplugin:ajs</dependency>
+    <resource type="download" name="setup.js" location="/js/setup.js"/>
+    <resource type="download" name="setup.css" location="/css/setup.css"/>
+    <context>ticketssetup</context>
+  </web-resource>
     <web-section name="setup-tickets" i18n-name-key="setup-tickets.name" key="setup-tickets" location="admin_plugins_menu" weight="1000">
         <description key="setup-tickets.description">The setup-tickets Plugin</description>
         <label key="setup-tickets.label"/>

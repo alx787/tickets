@@ -1,0 +1,35 @@
+
+.user-column-check {
+    width: 20px;
+}
+
+.user-column-npp {
+    width: 80px;
+}
+
+.user-column-login {
+    width: 100px;
+}
+
+.user-column-fio {
+    width: 260px;
+}
+
+.user-column-email {
+    width: 80px;
+}
+
+.user-column-podr {
+    width: 130px;
+}
+
+.user-column-password {
+    width: 100px;
+}
+
+.user-edit-button {
+    width: 30px;
+    height: 20px;
+    text-align: center;
+    cursor: pointer;
+}

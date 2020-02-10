@@ -2,13 +2,8 @@ package ru.ath.asu.tickets.auth;
 
 import ru.ath.asu.tickets.aousers.TicketUser;
 import ru.ath.asu.tickets.aousers.TicketUserDao;
-import ru.ath.asu.tickets.aousers.TicketUserDaoImpl;
-//import ru.ath.asu.tickets.aousers.TicketUserDao;
-//import ru.ath.asu.tickets.aousers.TicketUserDaoImpl;
 
 import javax.servlet.http.HttpSession;
-//import java.nio.charset.Charset;
-//import java.util.Random;
 
 import java.security.SecureRandom;
 
@@ -30,18 +25,18 @@ public class AuthTools {
         }
 
         // запрос в AO
-        userInfo = getUserInfoFromTicketUser(dao.findById(id));
+        TicketUser ticketUser = dao.findById(id);
 
-//        if (username.equals("alx") && password.equals("123")) {
-//
-//            userInfo.setLogin(username);
-//            userInfo.setFio(username + " " + username + " " + username);
-//            userInfo.setEmail(username + "@kiravto.ru");
-//            userInfo.setDepartment(username + " depart");
-//
-//            return userInfo;
-//
-//        }
+        if (ticketUser == null) {
+            return userInfo;
+        }
+
+        if (!ticketUser.getToken().equals(token)) {
+            return userInfo;
+        }
+
+        // получаем сущность с данными пользователя
+        userInfo = getUserInfoFromTicketUser(ticketUser);
 
         return userInfo;
     }
