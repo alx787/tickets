@@ -1,6 +1,6 @@
 
 $webResourceManager.requireResource("ru.ath.asu.tickets:tickets-resources-menu")
-
+$webResourceManager.requireResourcesForContext("hidelogo")
 
 
 <div style="margin: 5px 0 0 0; text-align: center">

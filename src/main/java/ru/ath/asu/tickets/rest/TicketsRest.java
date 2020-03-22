@@ -90,25 +90,6 @@ public class TicketsRest {
     {
 
 
-//        String sessUser = "";
-//        String sessToken = "";
-//
-//
-//        if ((session != null) && (!session.isNew())) {
-//            sessUser = (String) session.getAttribute("user");
-//            sessToken = (String) session.getAttribute("token");
-//
-//            log.warn(" ======== ");
-//            log.warn(" sess user from rest:  " + sessUser);
-//            log.warn(" sess token from rest: " + sessToken);
-//        } else {
-//            log.warn(" sess user from rest:  not found");
-//
-//        }
-//
-//
-//        UserInfo userInfo = AuthTools.authenticate(sessUser, sessToken);
-
         UserInfo userInfo = AuthTools.authenticateFromSession(ticketUserDao, request.getSession(false));
 
 
@@ -245,10 +226,8 @@ public class TicketsRest {
 //        issueInputParameters.addCustomFieldValue("customfield_10000", tUserName);
 //        issueInputParameters.addCustomFieldValue("customfield_10000", tFullUserName);
 
-
         JiraAuthenticationContext jAC = ComponentAccessor.getJiraAuthenticationContext();
         jAC.setLoggedInUser(authorUser);
-
 
         IssueService.CreateValidationResult createValidationResult = issueService.validateCreate(jAC.getLoggedInUser(), issueInputParameters);
 
@@ -256,7 +235,6 @@ public class TicketsRest {
 
         if (createValidationResult.isValid()) {
             log.error("entrou no createValidationResult");
-
 
             IssueService.IssueResult createResult = issueService.create(jAC.getLoggedInUser(), createValidationResult);
             if (!createResult.isValid()) {
@@ -279,7 +257,6 @@ public class TicketsRest {
 
         }
 
-
         JsonObject jsonObject = new JsonObject();
         if (createdIssue != null) {
             jsonObject.addProperty("issueId", String.valueOf(createdIssue.getNumber()));
@@ -288,7 +265,6 @@ public class TicketsRest {
             jsonObject.addProperty("issueId", "");
             jsonObject.addProperty("message", "ошибка создания задачи");
         }
-
 
 
         // 3 получить вложения (будем получать после создания задачи и прикреплять по одному)

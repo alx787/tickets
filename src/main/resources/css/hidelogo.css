@@ -1,0 +1,9 @@
+/* скроем заголовок и подвал */
+
+nav.aui-header {
+    display: none;
+}
+
+section.footer-body {
+    display: none;
+}

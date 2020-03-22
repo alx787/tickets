@@ -2,7 +2,7 @@
 $webResourceManager.requireResourcesForContext("tickets")
 $webResourceManager.requireResource("com.atlassian.auiplugin:aui-date-picker")
 $webResourceManager.requireResource("com.atlassian.auiplugin:dialog2")
-
+$webResourceManager.requireResourcesForContext("hidelogo")
 
 
 ###################################################

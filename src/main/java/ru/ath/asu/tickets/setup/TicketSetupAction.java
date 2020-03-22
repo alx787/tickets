@@ -83,6 +83,11 @@ public class TicketSetupAction extends JiraWebActionSupport
         return SUCCESS;
     }
 
+    public String doUsers() throws Exception {
+        return "users";
+    }
+
+
     public String doSave() throws Exception {
         JsonObject params = new JsonObject();
 
