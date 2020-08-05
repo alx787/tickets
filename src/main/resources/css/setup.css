@@ -1,4 +1,16 @@
 
+#ticketsUsers tr:hover {
+    background-color: #ebecf0;
+}
+
+#ticketsUsers tr user-edit-button:hover {
+    cursor: pointer;
+}
+
+.user-column-hidden {
+    display: none;
+}
+
 .user-column-check {
     width: 20px;
 }
@@ -32,4 +44,19 @@
     height: 20px;
     text-align: center;
     cursor: pointer;
+}
+
+.user-edit-content div {
+    clear: left;
+    padding-top: 5px;
+}
+
+.user-edit-content div label {
+    float: left;
+    width: 130px;
+    line-height: 30px;
+}
+
+.user-edit-content div input {
+    width: 410px;
 }

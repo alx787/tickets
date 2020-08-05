@@ -5,9 +5,80 @@
 ##    $webResourceManager.requireResource("com.atlassian.auiplugin:aui-buttons")
 ##    $webResourceManager.requireResourcesForContext("com.atlassian.auiplugin:message")
     $webResourceManager.requireResourcesForContext("ticketssetup")
+    $webResourceManager.requireResource("com.atlassian.auiplugin:dialog2")
+    $webResourceManager.requireResource("com.atlassian.auiplugin:aui-flag")
 </head>
 
 <body>
+
+
+###################################################
+## всплывающее окно для редактирования пользователя
+###################################################
+<section id="user-edit-dialog" class="aui-dialog2 aui-dialog2-medium aui-layer" role="dialog" aria-hidden="true">
+    <!-- Dialog header -->
+    <header class="aui-dialog2-header">
+        <!-- The dialog's title -->
+        <h2 class="aui-dialog2-header-main">Редактировать пользователя</h2>
+        <!-- Actions to render on the right of the header -->
+##        <div class="aui-dialog2-header-secondary">
+##            <form class="aui" action="#">
+##                <input id="demo-search" class="text" type="search" name="search">
+##            </form>
+##        </div>
+        <!-- Close icon -->
+        <a class="aui-dialog2-header-close">
+            <span class="aui-icon aui-icon-small aui-iconfont-close-dialog">Close</span>
+        </a>
+    </header>
+    <!-- Main dialog content -->
+    <div class="aui-dialog2-content user-edit-content">
+
+        <div>
+            <label for="editlogin">Логин</label>
+            <input id="editlogin" type="text" name="login">
+        </div>
+
+        <div>
+            <label for="editpass">Пароль</label>
+            <input id="editpass" type="text" name="pass">
+        </div>
+
+        <div>
+            <label for="editname">ФИО</label>
+            <input id="editname" type="text" name="name">
+        </div>
+
+        <div>
+            <label for="editemail">email</label>
+            <input id="editemail" type="text" name="email">
+        </div>
+
+        <div>
+            <label for="editdepart">Подразделение</label>
+            <input id="editdepart" type="text" name="depart">
+        </div>
+
+    </div>
+    <!-- Dialog footer -->
+    <footer class="aui-dialog2-footer">
+        <!-- Actions to render on the right of the footer -->
+        <div class="aui-dialog2-footer-actions">
+            <button class="aui-button aui-button-primary">Okay</button>
+##            <button class="aui-button">Next</button>
+            <button class="aui-button aui-button-link">Close</button>
+        </div>
+        <!-- Hint text is rendered on the left of the footer -->
+##        <div class="aui-dialog2-footer-hint">This is a hint.</div>
+    </footer>
+</section>
+###################################################
+
+
+
+
+
+
 
     <div class="aui-toolbar2" role="toolbar" style="margin-bottom: 15px;">
         <div class="aui-toolbar2-inner">
@@ -33,330 +104,26 @@
         </div>
 
         <div style="width: 100%; height: 300px; overflow-y: auto; overflow-x: hidden; background-color: #FFFFFF;">
-            <table class="aui">
+            <table id="ticketsUsers" class="aui">
                 <tbody>
 
+                    <tr>
+                        <td class="user-column-check"><input type="checkbox" /></td>
 
-                <tr>
-                    <td class="user-column-check"><input type="checkbox" /></td>
+                    ##  <input type="checkbox" id="scales" name="scales" checked="">
+                        <td class="user-column-npp">Номер</td>
+                        <td class="user-column-login">Логин</td>
+                        <td class="user-column-fio">ФИО</td>
+                        <td class="user-column-email">email</td>
+                        <td class="user-column-podr">Подразделение</td>
+                        <td class="user-column-password">Пароль</td>
+                        <td>
+                            <div class="user-edit-button">
+                                <span class="aui-icon aui-icon-small aui-iconfont-new-edit">Edit</span>
+                            </div>
+                        </td>
+                    </tr>
 
-                ##  <input type="checkbox" id="scales" name="scales" checked="">
-                    <td class="user-column-npp">Номер</td>
-                    <td class="user-column-login">Логин</td>
-                    <td class="user-column-fio">ФИО</td>
-                    <td class="user-column-email">email</td>
-                    <td class="user-column-podr">Подразделение</td>
-                    <td class="user-column-password">Пароль</td>
-                    <td>
-                        <div class="user-edit-button">
-                            <span class="aui-icon aui-icon-small aui-iconfont-new-edit">Edit</span>
-                        </div>
-                    </td>
-                </tr>
-
-
-                <tr>
-                    <td class="user-column-check"><input type="checkbox" /></td>
-
-                ##  <input type="checkbox" id="scales" name="scales" checked="">
-                    <td class="user-column-npp">Номер</td>
-                    <td class="user-column-login">Логин</td>
-                    <td class="user-column-fio">ФИО</td>
-                    <td class="user-column-email">email</td>
-                    <td class="user-column-podr">Подразделение</td>
-                    <td class="user-column-password">Пароль</td>
-                    <td>
-                        <div class="user-edit-button">
-                            <span class="aui-icon aui-icon-small aui-iconfont-new-edit">Edit</span>
-                        </div>
-                    </td>
-                </tr>
-
-
-                <tr>
-                    <td class="user-column-check"><input type="checkbox" /></td>
-
-                ##  <input type="checkbox" id="scales" name="scales" checked="">
-                    <td class="user-column-npp">Номер</td>
-                    <td class="user-column-login">Логин</td>
-                    <td class="user-column-fio">ФИО</td>
-                    <td class="user-column-email">email</td>
-                    <td class="user-column-podr">Подразделение</td>
-                    <td class="user-column-password">Пароль</td>
-                    <td>
-                        <div class="user-edit-button">
-                            <span class="aui-icon aui-icon-small aui-iconfont-new-edit">Edit</span>
-                        </div>
-                    </td>
-                </tr>
-
-
-                <tr>
-                    <td class="user-column-check"><input type="checkbox" /></td>
-
-                ##  <input type="checkbox" id="scales" name="scales" checked="">
-                    <td class="user-column-npp">Номер</td>
-                    <td class="user-column-login">Логин</td>
-                    <td class="user-column-fio">ФИО</td>
-                    <td class="user-column-email">email</td>
-                    <td class="user-column-podr">Подразделение</td>
-                    <td class="user-column-password">Пароль</td>
-                    <td>
-                        <div class="user-edit-button">
-                            <span class="aui-icon aui-icon-small aui-iconfont-new-edit">Edit</span>
-                        </div>
-                    </td>
-                </tr>
-
-
-                <tr>
-                    <td class="user-column-check"><input type="checkbox" /></td>
-
-                ##  <input type="checkbox" id="scales" name="scales" checked="">
-                    <td class="user-column-npp">Номер</td>
-                    <td class="user-column-login">Логин</td>
-                    <td class="user-column-fio">ФИО</td>
-                    <td class="user-column-email">email</td>
-                    <td class="user-column-podr">Подразделение</td>
-                    <td class="user-column-password">Пароль</td>
-                    <td>
-                        <div class="user-edit-button">
-                            <span class="aui-icon aui-icon-small aui-iconfont-new-edit">Edit</span>
-                        </div>
-                    </td>
-                </tr>
-
-
-                <tr>
-                    <td class="user-column-check"><input type="checkbox" /></td>
-
-                ##  <input type="checkbox" id="scales" name="scales" checked="">
-                    <td class="user-column-npp">Номер</td>
-                    <td class="user-column-login">Логин</td>
-                    <td class="user-column-fio">ФИО</td>
-                    <td class="user-column-email">email</td>
-                    <td class="user-column-podr">Подразделение</td>
-                    <td class="user-column-password">Пароль</td>
-                    <td>
-                        <div class="user-edit-button">
-                            <span class="aui-icon aui-icon-small aui-iconfont-new-edit">Edit</span>
-                        </div>
-                    </td>
-                </tr>
-
-
-                <tr>
-                    <td class="user-column-check"><input type="checkbox" /></td>
-
-                ##  <input type="checkbox" id="scales" name="scales" checked="">
-                    <td class="user-column-npp">Номер</td>
-                    <td class="user-column-login">Логин</td>
-                    <td class="user-column-fio">ФИО</td>
-                    <td class="user-column-email">email</td>
-                    <td class="user-column-podr">Подразделение</td>
-                    <td class="user-column-password">Пароль</td>
-                    <td>
-                        <div class="user-edit-button">
-                            <span class="aui-icon aui-icon-small aui-iconfont-new-edit">Edit</span>
-                        </div>
-                    </td>
-                </tr>
-
-
-                <tr>
-                    <td class="user-column-check"><input type="checkbox" /></td>
-
-                ##  <input type="checkbox" id="scales" name="scales" checked="">
-                    <td class="user-column-npp">Номер</td>
-                    <td class="user-column-login">Логин</td>
-                    <td class="user-column-fio">ФИО</td>
-                    <td class="user-column-email">email</td>
-                    <td class="user-column-podr">Подразделение</td>
-                    <td class="user-column-password">Пароль</td>
-                    <td>
-                        <div class="user-edit-button">
-                            <span class="aui-icon aui-icon-small aui-iconfont-new-edit">Edit</span>
-                        </div>
-                    </td>
-                </tr>
-
-
-                <tr>
-                    <td class="user-column-check"><input type="checkbox" /></td>
-
-                ##  <input type="checkbox" id="scales" name="scales" checked="">
-                    <td class="user-column-npp">Номер</td>
-                    <td class="user-column-login">Логин</td>
-                    <td class="user-column-fio">ФИО</td>
-                    <td class="user-column-email">email</td>
-                    <td class="user-column-podr">Подразделение</td>
-                    <td class="user-column-password">Пароль</td>
-                    <td>
-                        <div class="user-edit-button">
-                            <span class="aui-icon aui-icon-small aui-iconfont-new-edit">Edit</span>
-                        </div>
-                    </td>
-                </tr>
-
-
-                <tr>
-                    <td class="user-column-check"><input type="checkbox" /></td>
-
-                ##  <input type="checkbox" id="scales" name="scales" checked="">
-                    <td class="user-column-npp">Номер</td>
-                    <td class="user-column-login">Логин</td>
-                    <td class="user-column-fio">ФИО</td>
-                    <td class="user-column-email">email</td>
-                    <td class="user-column-podr">Подразделение</td>
-                    <td class="user-column-password">Пароль</td>
-                    <td>
-                        <div class="user-edit-button">
-                            <span class="aui-icon aui-icon-small aui-iconfont-new-edit">Edit</span>
-                        </div>
-                    </td>
-                </tr>
-
-
-                <tr>
-                    <td class="user-column-check"><input type="checkbox" /></td>
-
-                ##  <input type="checkbox" id="scales" name="scales" checked="">
-                    <td class="user-column-npp">Номер</td>
-                    <td class="user-column-login">Логин</td>
-                    <td class="user-column-fio">ФИО</td>
-                    <td class="user-column-email">email</td>
-                    <td class="user-column-podr">Подразделение</td>
-                    <td class="user-column-password">Пароль</td>
-                    <td>
-                        <div class="user-edit-button">
-                            <span class="aui-icon aui-icon-small aui-iconfont-new-edit">Edit</span>
-                        </div>
-                    </td>
-                </tr>
-
-
-
-
-                ##                            <tr>
-                ##                                <td>
-                ##                                    <input type="checkbox" />
-                ##                                ##                                    <input type="checkbox" id="scales" name="scales" checked="">
-                ##                                </td>
-                ##                                <td>Номер</td>
-                ##                                <td>Логин</td>
-                ##                                <td>ФИО</td>
-                ##                                <td>email</td>
-                ##                                <td>Подразделение</td>
-                ##                                <td>Пароль</td>
-                ##                            </tr>
-                ##                            <tr>
-                ##                                <td>
-                ##                                    <input type="checkbox" />
-                ##                                ##                                    <input type="checkbox" id="scales" name="scales" checked="">
-                ##                                </td>
-                ##                                <td>Номер</td>
-                ##                                <td>Логин</td>
-                ##                                <td>ФИО</td>
-                ##                                <td>email</td>
-                ##                                <td>Подразделение</td>
-                ##                                <td>Пароль</td>
-                ##                            </tr>
-                ##                            <tr>
-                ##                                <td>
-                ##                                    <input type="checkbox" />
-                ##                                ##                                    <input type="checkbox" id="scales" name="scales" checked="">
-                ##                                </td>
-                ##                                <td>Номер</td>
-                ##                                <td>Логин</td>
-                ##                                <td>ФИО</td>
-                ##                                <td>email</td>
-                ##                                <td>Подразделение</td>
-                ##                                <td>Пароль</td>
-                ##                            </tr>
-                ##                            <tr>
-                ##                                <td>
-                ##                                    <input type="checkbox" />
-                ##                                ##                                    <input type="checkbox" id="scales" name="scales" checked="">
-                ##                                </td>
-                ##                                <td>Номер</td>
-                ##                                <td>Логин</td>
-                ##                                <td>ФИО</td>
-                ##                                <td>email</td>
-                ##                                <td>Подразделение</td>
-                ##                                <td>Пароль</td>
-                ##                            </tr>
-                ##                            <tr>
-                ##                                <td>
-                ##                                    <input type="checkbox" />
-                ##                                ##                                    <input type="checkbox" id="scales" name="scales" checked="">
-                ##                                </td>
-                ##                                <td>Номер</td>
-                ##                                <td>Логин</td>
-                ##                                <td>ФИО</td>
-                ##                                <td>email</td>
-                ##                                <td>Подразделение</td>
-                ##                                <td>Пароль</td>
-                ##                            </tr>
-                ##                            <tr>
-                ##                                <td>
-                ##                                    <input type="checkbox" />
-                ##                                ##                                    <input type="checkbox" id="scales" name="scales" checked="">
-                ##                                </td>
-                ##                                <td>Номер</td>
-                ##                                <td>Логин</td>
-                ##                                <td>ФИО</td>
-                ##                                <td>email</td>
-                ##                                <td>Подразделение</td>
-                ##                                <td>Пароль</td>
-                ##                            </tr>
-                ##                            <tr>
-                ##                                <td>
-                ##                                    <input type="checkbox" />
-                ##                                ##                                    <input type="checkbox" id="scales" name="scales" checked="">
-                ##                                </td>
-                ##                                <td>Номер</td>
-                ##                                <td>Логин</td>
-                ##                                <td>ФИО</td>
-                ##                                <td>email</td>
-                ##                                <td>Подразделение</td>
-                ##                                <td>Пароль</td>
-                ##                            </tr>
-                ##                            <tr>
-                ##                                <td>
-                ##                                    <input type="checkbox" />
-                ##                                ##                                    <input type="checkbox" id="scales" name="scales" checked="">
-                ##                                </td>
-                ##                                <td>Номер</td>
-                ##                                <td>Логин</td>
-                ##                                <td>ФИО</td>
-                ##                                <td>email</td>
-                ##                                <td>Подразделение</td>
-                ##                                <td>Пароль</td>
-                ##                            </tr>
-                ##                            <tr>
-                ##                                <td>
-                ##                                    <input type="checkbox" />
-                ##                                ##                                    <input type="checkbox" id="scales" name="scales" checked="">
-                ##                                </td>
-                ##                                <td>Номер</td>
-                ##                                <td>Логин</td>
-                ##                                <td>ФИО</td>
-                ##                                <td>email</td>
-                ##                                <td>Подразделение</td>
-                ##                                <td>Пароль</td>
-                ##                            </tr>
-                ##                            <tr>
-                ##                                <td>
-                ##                                    <input type="checkbox" />
-                ##                                ##                                    <input type="checkbox" id="scales" name="scales" checked="">
-                ##                                </td>
-                ##                                <td>Номер</td>
-                ##                                <td>Логин</td>
-                ##                                <td>ФИО</td>
-                ##                                <td>email</td>
-                ##                                <td>Подразделение</td>
-                ##                                <td>Пароль</td>
-                ##                            </tr>
 
                 </tbody>
             </table>
