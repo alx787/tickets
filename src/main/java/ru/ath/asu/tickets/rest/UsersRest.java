@@ -3,6 +3,7 @@ package ru.ath.asu.tickets.rest;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.ath.asu.tickets.aousers.TicketUser;
@@ -105,20 +106,124 @@ public class UsersRest {
         return jsonRestAnswer;
     }
 
+    // получаем от клиента запрос на изменение параметров пользователя
+    // структура вида
+    // {
+    //    login: "alx1",
+    //    password: "pass1",
+    //    email: "alx1@aa.ru",
+    //    name: "alx1 user1 name1",
+    //    depart: "alxdepart1"
+    // }
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     @Path("/newuser")
-//    public Response addUser(MultivaluedMap<String, String> formParams) {
-    public Response addUser(@FormParam("par1") String formPar) {
+    public Response addUser(String inputJson) {
 
-//        if (formPar != null) {
-//            log.warn("===== " + formPar);
-//        }
+        JsonObject jsonInput = new JsonParser().parse(inputJson).getAsJsonObject();
 
-        return Response.ok("[]").build();
+        String login = jsonInput.get("login").getAsString();
+        String pass = jsonInput.get("pass").getAsString();
+        String email = jsonInput.get("email").getAsString();
+        String name = jsonInput.get("name").getAsString();
+        String depart = jsonInput.get("depart").getAsString();
+
+        TicketUser ticketUser = ticketUserDao.create(login, name, email, depart, pass);
+
+        if (ticketUser == null) {
+            return Response.ok("{\"status\":\"error\", \"description\":\"error creating user\"}").build();
+        }
+
+        // готовим ответ
+        JsonObject jsonOutput = new JsonObject();
+        jsonOutput.addProperty("status", "ok");
+        jsonOutput.addProperty("description", "ok");
+
+        Gson gson = new Gson();
+
+        return Response.ok(gson.toJson(jsonOutput)).build();
 
     }
 
 
+    // получаем от клиента запрос на изменение параметров пользователя
+    // структура вида
+    // {
+    //    id: 2,
+    //    login: "alx1",
+    //    password: "pass1",
+    //    email: "alx1@aa.ru",
+    //    name: "alx1 user1 name1",
+    //    depart: "alxdepart1"
+    // }
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path("/updateuser")
+    public Response updateUser(String inputJson) {
+
+        JsonObject jsonInput = new JsonParser().parse(inputJson).getAsJsonObject();
+
+        int userId = jsonInput.get("id").getAsInt();
+        String login = jsonInput.get("login").getAsString();
+        String pass = jsonInput.get("pass").getAsString();
+        String email = jsonInput.get("email").getAsString();
+        String name = jsonInput.get("name").getAsString();
+        String depart = jsonInput.get("depart").getAsString();
+
+//        log.warn("id " + userId + " login " + login + " pass " + pass + " email " + email + " name " + name + " depart " + depart);
+
+        if (userId <= 0) {
+            return Response.ok("{\"status\":\"error\", \"description\":\"wrong user id\"}").build();
+        }
+
+        // ищем пользователя в базе
+        TicketUser ticketUser = ticketUserDao.findById(userId);
+
+        if (ticketUser == null) {
+            return Response.ok("{\"status\":\"error\", \"description\":\"user not found in database\"}").build();
+        }
+
+        ticketUser.setLogin(login);
+        ticketUser.setPassword(pass);
+        ticketUser.setEmail(email);
+        ticketUser.setUserName(name);
+        ticketUser.setDepart(depart);
+
+        // сохраним
+        ticketUserDao.update(ticketUser);
+
+        // готовим ответ
+        JsonObject jsonOutput = new JsonObject();
+        jsonOutput.addProperty("status", "ok");
+        jsonOutput.addProperty("description", "ok");
+
+        Gson gson = new Gson();
+
+        return Response.ok(gson.toJson(jsonOutput)).build();
+
+    }
+
+
+    // удаление пользователей из базы
+    // передаем массив идентификаторов [id1, id2, .....]
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path("/deleteusers")
+    public Response deleteUser(String inputJson) {
+
+        JsonArray jsonInput = new JsonParser().parse(inputJson).getAsJsonArray();
+
+        if (jsonInput.size() == 0) {
+            return Response.ok("{\"status\":\"error\", \"description\":\"nothing to delete\"}").build();
+        }
+
+
+
+
+        return Response.ok("[]").build();
+
+    }
 }

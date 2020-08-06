@@ -6,6 +6,29 @@ setupticket.module = (function () {
         return false;
     };
 
+
+    // показать окно редактирования пользователя
+    var showUserWindow = function(id, login, password, name, email,depart) {
+        AJS.$("#edituserid").val(id);
+        AJS.$("#editlogin").val(login);
+        AJS.$("#editpass").val(password);
+        AJS.$("#editname").val(name);
+        AJS.$("#editemail").val(email);
+        AJS.$("#editdepart").val(depart);
+
+
+        if (AJS.$("#mode").val() == "edit") {
+            $("#user-edit-dialog .aui-dialog2-header-main").text("Редактировать пользователя");
+        };
+
+        if (AJS.$("#mode").val() == "create") {
+            $("#user-edit-dialog .aui-dialog2-header-main").text("Создать пользователя");
+        };
+
+        AJS.dialog2("#user-edit-dialog").show();
+    };
+
+
     // открыть окно редактирования пользователя
     var showUserEditWindow = function(userId) {
 
@@ -13,6 +36,7 @@ setupticket.module = (function () {
             return false
         }
 
+        AJS.$("#mode").val("edit");
 
         AJS.$.ajax({
             url: AJS.params.baseURL + "/rest/exploretickets/1.0/users/getusers/" + userId,
@@ -26,10 +50,10 @@ setupticket.module = (function () {
 
                 if ((data != null) && (data.status == "ok")){
 
-                }
+                    var userinfo = data.users[0];
 
-                console.log("data");
-                console.log(data);
+                    showUserWindow(userinfo.id, userinfo.login, userinfo.password, userinfo.name, userinfo.email, userinfo.depart);
+                }
 
             },
             error: function(data) {
@@ -41,13 +65,213 @@ setupticket.module = (function () {
             },
         });
 
+    };
 
 
+    // обновить информацию о пользователе в таблице
+    var refreshUserInfoInTable = function(id, login, pass, name, email, depart) {
+
+        // придется проходить всю таблицу
+        var rows = AJS.$("#ticketsUsers tr");
+        var rowId;
+        for (var i = 0; i < rows.length; i++) {
+            rowId = rows[i].getElementsByClassName("user-column-hidden")[0].innerText;
+
+            console.log("=====");
+            console.log(id.toString());
+            console.log(rowId);
+
+            if (id.toString() == rowId) {
+                rows[i].getElementsByClassName("user-column-login")[0].innerText = login;
+                rows[i].getElementsByClassName("user-column-password")[0].innerText = pass;
+                rows[i].getElementsByClassName("user-column-fio")[0].innerText = name;
+                rows[i].getElementsByClassName("user-column-email")[0].innerText = email;
+                rows[i].getElementsByClassName("user-column-podr")[0].innerText = depart;
+            }
+        }
+    };
 
 
-        AJS.dialog2("#user-edit-dialog").show();
+    // сохранить информацию о пользователе
+    var saveUserInfo = function() {
+        var jsonObj = {};
+
+        jsonObj.id      = AJS.$("#edituserid").val();
+        jsonObj.login   = AJS.$("#editlogin").val();
+        jsonObj.pass    = AJS.$("#editpass").val();
+        jsonObj.name    = AJS.$("#editname").val();
+        jsonObj.email   = AJS.$("#editemail").val();
+        jsonObj.depart  = AJS.$("#editdepart").val();
+
+
+        AJS.$.ajax({
+            url: AJS.params.baseURL + "/rest/exploretickets/1.0/users/updateuser",
+            type: 'post',
+            dataType: 'json',
+            data: JSON.stringify(jsonObj),
+            async: true,
+            contentType: "application/json; charset=utf-8",
+            success: function(data) {
+
+                if ((data != null) && (data.status == "ok")){
+                    var myFlag = AJS.flag({
+                        title: "Сведения обновлены",
+                        type: 'success',
+                        body: "Данные пользователя " + jsonObj.name + " обновлены",
+                        close: "auto"
+                    });
+
+                    refreshUserInfoInTable(jsonObj.id, jsonObj.login, jsonObj.pass, jsonObj.name, jsonObj.email, jsonObj.depart);
+
+                    AJS.dialog2("#user-edit-dialog").hide();
+
+                };
+
+                if ((data != null) && (data.status == "error")){
+                    var myFlag = AJS.flag({
+                        title: "Ошибка",
+                        type: 'error',
+                        body: data.description,
+                        close: "manual"
+                    });
+                };
+
+                if (data == null){
+                    var myFlag = AJS.flag({
+                        title: "Ошибка загрузки",
+                        type: 'error',
+                        body: "что то пошло не так ...",
+                        close: "manual"
+                    });
+                }
+
+            },
+            error: function(data) {
+                var myFlag = AJS.flag({
+                    title: "Ошибка загрузки",
+                    type: 'error',
+                    body: "что то пошло не так ...",
+                });
+
+            },
+        });
 
     };
+
+    // сохранить информацию о пользователе
+    var createUserInfo = function() {
+
+        var jsonObj = {};
+
+        jsonObj.id      = "";
+        jsonObj.login   = AJS.$("#editlogin").val();
+        jsonObj.pass    = AJS.$("#editpass").val();
+        jsonObj.name    = AJS.$("#editname").val();
+        jsonObj.email   = AJS.$("#editemail").val();
+        jsonObj.depart  = AJS.$("#editdepart").val();
+
+        var errFlag = false;
+        var errText = "";
+
+
+        //////////////////////////////////////////////
+        // проверка заполненности полей
+        //////////////////////////////////////////////
+        if (AJS.$.trim(jsonObj.login) == "") {
+            errFlag = true;
+            errText = errText + "<div>не заполнено поле ЛОГИН</div>";
+            AJS.$("#editlogin").css("background-color", "#ffe9e9");
+        };
+
+        if (AJS.$.trim(jsonObj.pass) == "") {
+            errFlag = true;
+            errText = errText + "<div>не заполнено поле ПАРОЛЬ</div>";
+            AJS.$("#editpass").css("background-color", "#ffe9e9");
+        };
+
+        if (AJS.$.trim(jsonObj.name) == "") {
+            errFlag = true;
+            errText = errText + "<div>не заполнено поле ФИО</div>";
+            AJS.$("#editname").css("background-color", "#ffe9e9");
+        };
+
+        if (AJS.$.trim(jsonObj.email) == "") {
+            errFlag = true;
+            errText = errText + "<div>не заполнено поле EMAIL</div>";
+            AJS.$("#editemail").css("background-color", "#ffe9e9");
+        };
+
+        if (AJS.$.trim(jsonObj.depart) == "") {
+            errFlag = true;
+            errText = errText + "<div>не заполнено поле ПОДРАЗДЕЛЕНИЕ</div>";
+            AJS.$("#editdepart").css("background-color", "#ffe9e9");
+        };
+
+
+        if (errFlag) {
+            var myFlag = AJS.flag({title: "Ошибка", type: 'error', body: errText, });
+            return false
+        };
+
+
+        // сохраним данные
+        AJS.$.ajax({
+            url: AJS.params.baseURL + "/rest/exploretickets/1.0/users/newuser",
+            type: 'post',
+            dataType: 'json',
+            data: JSON.stringify(jsonObj),
+            async: true,
+            contentType: "application/json; charset=utf-8",
+            success: function(data) {
+
+                if ((data != null) && (data.status == "ok")){
+                    var myFlag = AJS.flag({
+                        title: "Сведения обновлены",
+                        type: 'success',
+                        body: "Данные пользователя " + jsonObj.name + " обновлены",
+                        close: "auto"
+                    });
+
+                    getUsersAndPutInTable();
+
+                    AJS.dialog2("#user-edit-dialog").hide();
+
+                };
+
+                if ((data != null) && (data.status == "error")){
+                    var myFlag = AJS.flag({
+                        title: "Ошибка",
+                        type: 'error',
+                        body: data.description,
+                        close: "manual"
+                    });
+                };
+
+                if (data == null){
+                    var myFlag = AJS.flag({
+                        title: "Ошибка загрузки",
+                        type: 'error',
+                        body: "что то пошло не так ...",
+                        close: "manual"
+                    });
+                }
+
+            },
+            error: function(data) {
+                var myFlag = AJS.flag({
+                    title: "Ошибка загрузки",
+                    type: 'error',
+                    body: "что то пошло не так ...",
+                });
+
+            },
+        });
+
+
+
+
+    };
+
 
 
     // получить строку по шаблону
@@ -78,13 +302,13 @@ setupticket.module = (function () {
         rowStr = rowStr.replace("__pass__", pass);
 
         return rowStr;
-    }
+    };
 
     // очистить таблицу
     var clearUsersTable = function() {
         AJS.$("#ticketsUsers").empty();
         return false;
-    }
+    };
 
     // сгенерить строки и поместить их в таблицу
     var refreshDataInTable = function(usersArray) {
@@ -119,10 +343,10 @@ setupticket.module = (function () {
                 showUserEditWindow(userId);
             });
         }
-    }
+    };
 
     // получить данные с сервера и заполнить таблицу
-    var grtUsersAndPutInTable = function() {
+    var getUsersAndPutInTable = function() {
 
         AJS.$.ajax({
             url: AJS.params.baseURL + "/rest/exploretickets/1.0/users/getusers/all",
@@ -160,19 +384,89 @@ setupticket.module = (function () {
             },
         });
 
+    };
+
+
+    // удаление записей пользователя из базы
+    var removeUserInfo = function() {
+        // получим идентификаторы объектов для удаления
+        // в простой массив все перешлем
+        var jsonObj = []
+
+        var rows = AJS.$("#ticketsUsers tr");
+
+        for (var i = 0; i < rows.length; i++) {
+            if (rows[i].getElementsByClassName("user-column-check")[0].getElementsByTagName("input")[0].checked) {
+                jsonObj.push(rows[i].getElementsByClassName("user-column-hidden")[0].innerText);
+            }
+        }
+
+        if (jsonObj.length == 0) {
+            return false;
+        }
+
+        // тут надо вызывать рест для удаления объектов
+
+
     }
 
+
+
+    //////////////////////////////////////////////////
+    // основные события
+    //////////////////////////////////////////////////
+
+    // заполнить таблицу
     var fillUsersTable = function() {
+        getUsersAndPutInTable();
+    };
 
-        grtUsersAndPutInTable();
+    // добавить пользователя
+    var addUser = function() {
+        // для добавления пользователя нужно показать пустую форму
+        AJS.$("#mode").val("create");
+        showUserWindow("", "", "", "", "", "");
+    };
 
-    }
+    // удаление пользователя
+    var delUser = function() {
+        // заполнить данные для окна удаления
+        var rows = AJS.$("#ticketsUsers tr");
+
+        var message = "";
+
+        for (var i = 0; i < rows.length; i++) {
+            if (rows[i].getElementsByClassName("user-column-check")[0].getElementsByTagName("input")[0].checked) {
+                message = message
+                            + "<p>"
+                            + rows[i].getElementsByClassName("user-column-fio")[0].innerText
+                            + "(" + rows[i].getElementsByClassName("user-column-login")[0].innerText + "), "
+                            + "</p>";
+            }
+        }
+
+        if (AJS.$.trim(message) == "") {
+            message = "Нечего удалять";
+        }
+
+        AJS.$("#deleted-users").empty();
+        AJS.$("#deleted-users").html(message);
+
+        // нужно показать окно с подтверждением удаления
+        AJS.dialog2("#delete-dialog").show();
+    };
 
 
 
     return {
         showMessage:showMessage,
         fillUsersTable:fillUsersTable,
+        saveUserInfo:saveUserInfo,
+        addUser:addUser,
+        createUserInfo:createUserInfo,
+        delUser:delUser,
+        removeUserInfo:removeUserInfo,
+
 
     };
 
@@ -181,5 +475,54 @@ setupticket.module = (function () {
 
 
 AJS.$(document).ready(function() {
+
+    // кнопка добавить
+    AJS.$("#button-add").on("click", function (e) {
+        setupticket.module.addUser();
+    });
+
+    // кнопка удалить
+    AJS.$("#button-del").on("click", function (e) {
+        setupticket.module.delUser();
+    });
+
+
+    ///////////////////////////////////////////////////////
+    // события кнопок формы редактирования
+    AJS.$("#user-edit-ok").on("click", function (e) {
+        e.preventDefault();
+
+        if (AJS.$("#mode").val() == "edit") {
+            setupticket.module.saveUserInfo();
+        }
+
+        if (AJS.$("#mode").val() == "create") {
+            setupticket.module.createUserInfo();
+        }
+
+    });
+
+    AJS.$("#user-edit-cancel").on("click", function (e) {
+        e.preventDefault();
+        AJS.dialog2("#user-edit-dialog").hide();
+    });
+    ///////////////////////////////////////////////////////
+
+
+    ///////////////////////////////////////////////////////
+    // события кнопок формы удаления
+    AJS.$("#delete-dialog-confirm").on('click', function (e) {
+        e.preventDefault();
+        setupticket.module.removeUserInfo();
+    });
+
+    AJS.$("#delete-dialog-cancel").on('click', function (e) {
+        e.preventDefault();
+        AJS.dialog2("#delete-dialog").hide();
+    });
+
+    ///////////////////////////////////////////////////////
+
+
     setupticket.module.fillUsersTable();
 });

@@ -59,4 +59,6 @@
 
 .user-edit-content div input {
     width: 410px;
+    padding: 3px;
+    border: 1px solid #c1c7d0;
 }
