@@ -7,6 +7,7 @@ public interface TicketUserDao {
     TicketUser create(String login, String username, String email, String depart, String password);
     void update(TicketUser ticketUser);
     void remove(TicketUser ticketUser);
+    void removeAll();
 }
 
 /*

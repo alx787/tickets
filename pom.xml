@@ -259,7 +259,8 @@
     <properties>
         <jira.version>7.13.0</jira.version>
         <amps.version>8.0.2</amps.version>
-        <ao.version>0.9.6</ao.version>
+        <!--<ao.version>0.9.6</ao.version>-->
+        <ao.version>3.2.9</ao.version>
         <plugin.testrunner.version>2.0.1</plugin.testrunner.version>
         <!--<atlassian.spring.scanner.version>1.2.13</atlassian.spring.scanner.version>-->
         <atlassian.spring.scanner.version>2.0.0</atlassian.spring.scanner.version>

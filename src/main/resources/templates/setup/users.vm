@@ -105,6 +105,30 @@
 ###################################################
 
 
+###################################################
+## всплывающее окно для загрузки файла
+###################################################
+<section id="loadfile-dialog" class="aui-dialog2 aui-dialog2-small aui-layer" role="dialog" aria-hidden="true">
+    <header class="aui-dialog2-header">
+        <h2 class="aui-dialog2-header-main">Загрузить пользователей</h2>
+        <a class="aui-dialog2-header-close">
+            <span class="aui-icon aui-icon-small aui-iconfont-close-dialog">Close</span>
+        </a>
+    </header>
+    <div class="aui-dialog2-content">
+        <div id="deleted-users">
+            <label for="users-file-upload">Выберите файл</label>
+            <input style="width: 350px; border: 1px solid #d8dce1; padding: 5px;" type="file" id="users-file-upload" name="users-file-upload">
+        </div>
+    </div>
+    <footer class="aui-dialog2-footer">
+        <div class="aui-dialog2-footer-actions">
+            <button id="loadfile-dialog-confirm" class="aui-button aui-button-primary">Загрузить</button>
+            <button id="loadfile-dialog-cancel" class="aui-button aui-button-link">Отмена</button>
+        </div>
+    </footer>
+</section>
+###################################################
 
 
 

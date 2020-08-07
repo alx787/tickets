@@ -1,10 +1,16 @@
 
 $webResourceManager.requireResource("ru.ath.asu.tickets:tickets-resources-menu")
 $webResourceManager.requireResourcesForContext("hidelogo")
+$webResourceManager.requireResourcesForContext("tickets")
 
 
 <div style="margin: 5px 0 0 0; text-align: center">
     <div style="width: 700px; margin: 0 auto; text-align: left;">
+
+##        <div style="float: left;">
+##            <img src="$baseurl/download/resources/ru.ath.asu.tickets:tickets/images/logo.png"></img>
+##            <img src="images/logo.png"></img>
+##        </div>
 
         <div style="float: right">
             <p>

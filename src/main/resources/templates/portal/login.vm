@@ -1,4 +1,4 @@
-$webResourceManager.requireResourcesForContext("hidelogo")
+$webResourceManager.requireResourcesForContext("hidelogo")КЧАК
 
 <div style="margin: 100px 0 200px 0; text-align: center">
 

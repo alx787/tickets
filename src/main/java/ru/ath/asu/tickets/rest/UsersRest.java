@@ -1,11 +1,15 @@
 package ru.ath.asu.tickets.rest;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.atlassian.plugins.rest.common.multipart.FilePart;
+import com.atlassian.plugins.rest.common.multipart.MultipartFormParam;
+import com.google.gson.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 import ru.ath.asu.tickets.aousers.TicketUser;
 import ru.ath.asu.tickets.aousers.TicketUserDao;
 
@@ -14,6 +18,14 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 
 @Path("/users")
 public class UsersRest {
@@ -221,9 +233,111 @@ public class UsersRest {
         }
 
 
+        for (JsonElement jsonElement : jsonInput) {
+            TicketUser ticketUser = ticketUserDao.findById(jsonElement.getAsInt());
+            ticketUserDao.remove(ticketUser);
+        }
 
-
-        return Response.ok("[]").build();
+        return Response.ok("{\"status\":\"ok\", \"description\":\"delete complete\"}").build();
 
     }
+
+    // передаем файл с пользователями
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.MULTIPART_FORM_DATA})
+    @Path("/loadusers")
+    public Response loadUsers(@MultipartFormParam("users-file-upload") List<FilePart> filePartList) {
+
+        // читаем файл
+        if (filePartList.size() != 1) {
+            return Response.ok("{\"status\":\"error\", \"description\":\"received " + String.valueOf(filePartList.size()) + " files, Need 1 file\"}").build();
+        }
+
+        int cnt = 0; // счетчик загруженных записей
+
+
+        try {
+            File tempFile = File.createTempFile("users_load", "tickets");
+
+            FileOutputStream outputStream = new FileOutputStream(tempFile);
+
+            InputStream is = null;
+            is = filePartList.get(0).getInputStream();
+
+            int read;
+            byte[] bytes = new byte[1024];
+            while ((read = is.read(bytes)) != -1) {
+                outputStream.write(bytes, 0, read);
+            }
+
+
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(tempFile);
+
+
+            // <user fio="" email="" depart="" password="">
+            // обходим файл
+            NodeList nList = doc.getElementsByTagName("user");
+
+
+
+            // тут всех удалим если не будет ошибок
+            ticketUserDao.removeAll();
+
+
+
+            for (int i = 0; i < nList.getLength(); i++) {
+
+                Node node = nList.item(i);
+
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+
+                    Element element = (Element) node;
+
+                    String fio = element.getAttribute("fio");
+                    String email = element.getAttribute("email");
+                    String depart = element.getAttribute("depart");
+                    String password = element.getAttribute("password");
+
+
+                    TicketUser ticketUser = ticketUserDao.create(email, fio, email, depart, password);
+
+                    if (ticketUser == null) {
+                        tempFile.delete();
+                        return Response.ok("{\"status\":\"error\", \"description\":\"error creating user " + fio + " email " + email + "\"}").build();
+                    }
+
+
+//                    log.warn("fio: " + fio + ", email: " + email + ", depart: " +  depart + ", password: " +  password);
+
+                    cnt++;
+                }
+
+            }
+
+
+            tempFile.delete();
+
+        } catch (IOException e) {
+            return Response.ok("{\"status\":\"error\", \"description\":\"received " + String.valueOf(filePartList.size()) + " files, Need 1 file\"}").build();
+
+        } catch (ParserConfigurationException e) {
+            return Response.ok("{\"status\":\"error\", \"description\":\"error configure parse file\"}").build();
+//            e.printStackTrace();
+        } catch (SAXException e) {
+//            return Response.ok("{\"status\":\"error\", \"description\":\"error SAX parser\"}").build();
+            return Response.ok("{\"status\":\"error\", \"description\":\"error in XML parser\"}").build();
+//            e.printStackTrace();
+        }
+
+        if (cnt == 0) {
+            return Response.ok("{\"status\":\"error\", \"description\":\"no one record load\"}").build();
+        }
+
+        return Response.ok("{\"status\":\"ok\", \"description\":\"load " + String.valueOf(cnt) + " records\"}").build();
+
+    }
+
 }

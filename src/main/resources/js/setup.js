@@ -266,10 +266,6 @@ setupticket.module = (function () {
 
             },
         });
-
-
-
-
     };
 
 
@@ -407,8 +403,59 @@ setupticket.module = (function () {
 
         // тут надо вызывать рест для удаления объектов
 
+        AJS.$.ajax({
+            url: AJS.params.baseURL + "/rest/exploretickets/1.0/users/deleteusers",
+            type: 'post',
+            dataType: 'json',
+            data: JSON.stringify(jsonObj),
+            async: true,
+            contentType: "application/json; charset=utf-8",
+            success: function(data) {
 
-    }
+                if ((data != null) && (data.status == "ok")){
+                    var myFlag = AJS.flag({
+                        title: "Пользователи удалены",
+                        type: 'success',
+                        body: "Пользователи удалены",
+                        close: "auto"
+                    });
+
+                    getUsersAndPutInTable();
+
+                    AJS.dialog2("#delete-dialog").hide();
+
+                };
+
+                if ((data != null) && (data.status == "error")){
+                    var myFlag = AJS.flag({
+                        title: "Ошибка",
+                        type: 'error',
+                        body: data.description,
+                        close: "manual"
+                    });
+                };
+
+                if (data == null){
+                    var myFlag = AJS.flag({
+                        title: "Ошибка удаления",
+                        type: 'error',
+                        body: "что то пошло не так ...",
+                        close: "manual"
+                    });
+                }
+
+            },
+            error: function(data) {
+                var myFlag = AJS.flag({
+                    title: "Ошибка удаления",
+                    type: 'error',
+                    body: "что то пошло не так ...",
+                });
+
+            },
+        });
+
+    };
 
 
 
@@ -457,6 +504,91 @@ setupticket.module = (function () {
     };
 
 
+    // загрузить файл с пользователями
+    var loadUser = function() {
+        AJS.dialog2("#loadfile-dialog").show();
+    };
+
+    // загрузить файл с пользователями
+    var loadUserInfo = function() {
+        var formDataFile = new FormData();
+
+        var fileObj = AJS.$("#users-file-upload")[0].files;
+        var fileLen = fileObj.length;
+
+        if ((fileLen == 0) || (fileLen > 1)) {
+            return false;
+        }
+
+        formDataFile.append("users-file-upload", fileObj[0]);
+
+        // formDataFile.append("ticket-username", AJS.$("#ticket-username").text());
+        // formDataFile.append("ticket-useremail", AJS.$("#ticket-useremail").text());
+        // formDataFile.append("ticket-userdepart", AJS.$("#ticket-userdepart").text());
+
+        AJS.$.ajax({
+            url: AJS.params.baseURL + "/rest/exploretickets/1.0/users/loadusers",
+            type: 'post',
+            enctype: 'multipart/form-data',
+            processData: false,  // Important!
+            dataType: 'json',
+            data: formDataFile,
+            cache: false,
+            async: true,
+            // async: asyncFlag,
+            // contentType: "application/json; charset=utf-8",
+            contentType: false,
+            success: function (data) {
+                if ((data != null) && (data.status == "ok")) {
+                    var myFlag = AJS.flag({
+                        title: "Пользователи загружены",
+                        type: 'success',
+                        body: data.description,
+                        close: "auto"
+                    });
+
+                    getUsersAndPutInTable();
+
+                    AJS.dialog2("#loadfile-dialog").hide();
+                }
+
+                if ((data != null) && (data.status == "error")){
+                    var myFlag = AJS.flag({
+                        title: "Ошибка",
+                        type: 'error',
+                        body: data.description,
+                        close: "manual"
+                    });
+                };
+
+                if (data == null){
+                    var myFlag = AJS.flag({
+                        title: "Ошибка загрузки",
+                        type: 'error',
+                        body: "что то пошло не так ...",
+                        close: "manual"
+                    });
+                }
+
+
+
+            },
+            error: function (data) {
+
+                var myFlag = AJS.flag({
+                    type: "error",
+                    body: '<span style="color: #FF0000;">Ошибка при отправке !!!</span>'
+                });
+
+            },
+            complete: function () {
+
+            },
+
+        });
+
+
+    };
 
     return {
         showMessage:showMessage,
@@ -466,7 +598,8 @@ setupticket.module = (function () {
         createUserInfo:createUserInfo,
         delUser:delUser,
         removeUserInfo:removeUserInfo,
-
+        loadUser:loadUser,
+        loadUserInfo:loadUserInfo,
 
     };
 
@@ -485,6 +618,12 @@ AJS.$(document).ready(function() {
     AJS.$("#button-del").on("click", function (e) {
         setupticket.module.delUser();
     });
+
+    // кнопка загрузить
+    AJS.$("#button-load").on("click", function (e) {
+        setupticket.module.loadUser();
+    });
+
 
 
     ///////////////////////////////////////////////////////
@@ -522,6 +661,24 @@ AJS.$(document).ready(function() {
     });
 
     ///////////////////////////////////////////////////////
+
+
+    ///////////////////////////////////////////////////////
+    // события кнопок формы загрузки
+    AJS.$("#loadfile-dialog-confirm").on('click', function (e) {
+        e.preventDefault();
+        setupticket.module.loadUserInfo();
+    });
+
+    AJS.$("#loadfile-dialog-cancel").on('click', function (e) {
+        e.preventDefault();
+        AJS.dialog2("#loadfile-dialog").hide();
+    });
+
+    ///////////////////////////////////////////////////////
+
+
+
 
 
     setupticket.module.fillUsersTable();

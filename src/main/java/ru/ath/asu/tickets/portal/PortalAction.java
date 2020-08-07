@@ -65,6 +65,9 @@ public class PortalAction extends JiraWebActionSupport
 
     public String doAuth() throws Exception {
 
+        // для входа нужно будет ввести в броузер url вида
+        // localhost:2990/jira/secure/portalAction!auth.jspa?login-name=tvv@kiravto.ru&login-pass=28cGJ7qhwD
+
         String loginName = getHttpRequest().getParameter("login-name");
         String loginPass = getHttpRequest().getParameter("login-pass");
 

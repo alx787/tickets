@@ -81,9 +81,14 @@ public class TicketUserDaoImpl implements TicketUserDao {
         tuEntity.save();
     }
 
-
     @Override
     public void remove(TicketUser ticketUser) {
         ao.delete(ticketUser);
     }
+
+    @Override
+    public void removeAll() {
+        ao.deleteWithSQL(TicketUser.class, "\"ID\" > ?", 0);
+    }
+
 }
