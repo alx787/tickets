@@ -14,6 +14,7 @@ import javax.inject.Named;
 @Named
 public class TicketUserDaoImpl implements TicketUserDao {
 
+    @ComponentImport
     private final ActiveObjects ao;
 
     @Inject

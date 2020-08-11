@@ -2,55 +2,41 @@
 $webResourceManager.requireResource("ru.ath.asu.tickets:tickets-resources-menu")
 $webResourceManager.requireResourcesForContext("hidelogo")
 $webResourceManager.requireResourcesForContext("tickets")
+$webResourceManager.requireResourcesForContext("header")
 
 
-<div style="margin: 5px 0 0 0; text-align: center">
-    <div style="width: 700px; margin: 0 auto; text-align: left;">
-
-##        <div style="float: left;">
-##            <img src="$baseurl/download/resources/ru.ath.asu.tickets:tickets/images/logo.png"></img>
-##            <img src="images/logo.png"></img>
-##        </div>
-
-        <div style="float: right">
-            <p>
-                <button  class="aui-button aui-button-primary" onclick="window.location.href = 'portalAction!default.jspa';">Выход</button>
-            </p>
-        </div>
-
-        <div style="width: 550px; font-size: 17px;">
-            <span class="aui-icon aui-icon-small aui-iconfont-office-building">Insert meaningful text here for accessibility</span> ОАО Автотранспортное хозяйство
-        </div>
-        <div style="width: 550px; font-size: 17px;">
-            <span class="aui-icon aui-icon-small aui-iconfont-location">Insert meaningful text here for accessibility</span> КЧАК
-        </div>
-        <div style="width: 550px; font-size: 17px;">
-            <span class="aui-icon aui-icon-small aui-iconfont-person">Insert meaningful text here for accessibility</span> Иванов Иван Иванович
-        </div>
+###################################################
+## верхнее меню
+###################################################
+#parse("/templates/orders/header.vm")
 
 
+<div class="buttons-wrapper">
+    <div class="buttons-center-block">
+        <button class="buttons-custom aui-button aui-button-primary" onclick="window.location.href = 'portalAction!default.jspa';">Выход</button>
     </div>
 </div>
+###################################################
 
 
 
-<div style="margin: 50px 0 200px 0; text-align: center">
+<div style="margin: 10px 0 200px 0; text-align: left">
 
-    <h1>Выберите раздел</h1>
+    <div style="width:  500px; margin: 0 auto;">
+        <ul class="ath-main-menu">
+            <li>
+                <h1 style="display: block; padding-left: 40px;">Выберите раздел</h1>
+            </li>
+        </ul>
+    </div>
 
-    <div style="width:  500px; margin: 30px auto;">
+    <div style="width:  500px; margin: 15px auto;">
         <ul class="ath-main-menu">
             <li><a href="ordersAction!newTicket.jspa">Создать заявку</a></li>
             <li><a href="ordersAction!activeTicket.jspa">Заявки в работе</a></li>
             <li><a href="ordersAction!archTicket.jspa">Заявки выполненные</a></li>
 
-##        </ul>
-
-##        <div class="aui-nav-heading"><strong></strong></div>
-
-##        <ul class="ath-main-menu">
-
-            <li><a href="https://example.com/">Полезные материалы</a></li>
+##            <li><a href="https://example.com/">Полезные материалы</a></li>
         </ul>
     </div>
 

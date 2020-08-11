@@ -92,6 +92,10 @@ public class PortalAction extends JiraWebActionSupport
             session.setAttribute("user", userInfo.getId());
             session.setAttribute("token", userInfo.getToken());
 
+            // тут подцепим к сессии имя и подразделение
+            session.setAttribute("fio", userInfo.getFio());
+            session.setAttribute("department", userInfo.getDepartment());
+
 
             log.warn(" ===== авторизовался");
             return getRedirect("ordersAction!menu.jspa");

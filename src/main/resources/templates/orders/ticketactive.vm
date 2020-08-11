@@ -3,6 +3,7 @@ $webResourceManager.requireResourcesForContext("tickets")
 $webResourceManager.requireResource("com.atlassian.auiplugin:aui-date-picker")
 $webResourceManager.requireResource("com.atlassian.auiplugin:dialog2")
 $webResourceManager.requireResourcesForContext("hidelogo")
+$webResourceManager.requireResourcesForContext("header")
 
 
 ###################################################
@@ -82,34 +83,20 @@ $webResourceManager.requireResourcesForContext("hidelogo")
 </section>
 
 
-
-
 ###################################################
 ## верхнее меню
 ###################################################
-<div style="margin: 5px 0 0 0; text-align: center">
-    <div style="width: 700px; margin: 0 auto; text-align: left;">
 
-        <div style="float: right">
-            <p>
-                <button  class="aui-button aui-button-primary" onclick="window.location.href = 'ordersAction!menu.jspa';">Меню</button>
-                <button  class="aui-button aui-button-primary" onclick="window.location.href = 'portalAction!default.jspa';">Выход</button>
-            </p>
-        </div>
-
-        <div style="width: 550px; font-size: 17px;">
-            <span class="aui-icon aui-icon-small aui-iconfont-office-building">Insert meaningful text here for accessibility</span> ОАО Автотранспортное хозяйство
-        </div>
-        <div style="width: 550px; font-size: 17px;">
-            <span class="aui-icon aui-icon-small aui-iconfont-location">Insert meaningful text here for accessibility</span> КЧАК
-        </div>
-        <div style="width: 550px; font-size: 17px;">
-            <span class="aui-icon aui-icon-small aui-iconfont-person">Insert meaningful text here for accessibility</span> Иванов Иван Иванович
-        </div>
+#parse("/templates/orders/header.vm")
 
 
+<div class="buttons-wrapper">
+    <div class="buttons-center-block">
+        <button class="buttons-custom aui-button aui-button-primary" onclick="window.location.href = 'ordersAction!menu.jspa';">Меню</button>
+        <button class="buttons-custom aui-button aui-button-primary" onclick="window.location.href = 'portalAction!default.jspa';">Выход</button>
     </div>
 </div>
+
 
 
 ###################################################

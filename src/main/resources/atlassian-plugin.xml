@@ -39,6 +39,13 @@
     <resource type="download" name="hidelogo.css" location="/css/hidelogo.css"/>
     <context>hidelogo</context>
   </web-resource>
+  <web-resource key="tickets-resources-header" name="resourcesfor header">
+    <dependency>com.atlassian.auiplugin:ajs</dependency>
+    <resource type="download" name="header.css" location="/css/header.css"/>
+    <context>header</context>
+  </web-resource>
+
+
 
     <web-section name="setup-tickets" i18n-name-key="setup-tickets.name" key="setup-tickets" location="admin_plugins_menu" weight="1000">
         <description key="setup-tickets.description">The setup-tickets Plugin</description>

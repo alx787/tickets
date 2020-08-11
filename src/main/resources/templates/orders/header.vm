@@ -1,0 +1,22 @@
+<div class="header-wrapper">
+    <div class="header-center-block">
+
+        <div class="header-block-float-left">
+            <img style="height: 110px" src="$baseurl/download/resources/ru.ath.asu.tickets:tickets-resources/images/logo.png"></img>
+        </div>
+
+
+        <div class="header-block-float-left header-info-labels">
+            <div>
+                <span class="aui-icon aui-icon-small aui-iconfont-office-building">Insert meaningful text here for accessibility</span> ОАО Автотранспортное хозяйство
+            </div>
+            <div>
+                <span class="aui-icon aui-icon-small aui-iconfont-location">Insert meaningful text here for accessibility</span> $department
+            </div>
+            <div>
+                <span class="aui-icon aui-icon-small aui-iconfont-person">Insert meaningful text here for accessibility</span> $fio
+            </div>
+        </div>
+
+    </div>
+</div>

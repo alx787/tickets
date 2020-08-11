@@ -1,4 +1,21 @@
-$webResourceManager.requireResourcesForContext("hidelogo")КЧАК
+$webResourceManager.requireResourcesForContext("hidelogo")
+$webResourceManager.requireResourcesForContext("header")
+
+
+
+<div class="header-wrapper">
+    <div style="text-align: center" class="header-center-block">
+
+        <div style="width: 100%;" class="header-info-labels">
+            <span class="aui-icon aui-icon-small aui-iconfont-office-building">Insert meaningful text here for accessibility</span> ОАО Автотранспортное хозяйство
+        </div>
+        <div style="margin: 32px 0 0 0;">
+            <img style="height: 110px" src="$baseurl/download/resources/ru.ath.asu.tickets:tickets-resources/images/logo.png"></img>
+        </div>
+
+    </div>
+</div>
+
 
 <div style="margin: 100px 0 200px 0; text-align: center">
 
