@@ -30,7 +30,7 @@ public class TicketSetupAction extends JiraWebActionSupport
 
     private String projectKey;
     private String reporterDefault;
-    private String usernameFieldId;
+//    private String usernameFieldId;
     private String userFullNameFieldId;
     private String useremailFieldId;
     private String userdepartFieldId;
@@ -54,7 +54,7 @@ public class TicketSetupAction extends JiraWebActionSupport
 
         projectKey = "";
         reporterDefault = "";
-        usernameFieldId = "";
+//        usernameFieldId = "";
         userFullNameFieldId = "";
         useremailFieldId = "";
         userdepartFieldId = "";
@@ -72,7 +72,7 @@ public class TicketSetupAction extends JiraWebActionSupport
 
         projectKey = PluginSettingsServiceTools.getValueFromSettingsCfg(cfg, "projectKey");
         reporterDefault = PluginSettingsServiceTools.getValueFromSettingsCfg(cfg, "reporterDefault");
-        usernameFieldId = PluginSettingsServiceTools.getValueFromSettingsCfg(cfg, "usernameFieldId");
+//        usernameFieldId = PluginSettingsServiceTools.getValueFromSettingsCfg(cfg, "usernameFieldId");
         userFullNameFieldId = PluginSettingsServiceTools.getValueFromSettingsCfg(cfg, "userFullNameFieldId");
         useremailFieldId = PluginSettingsServiceTools.getValueFromSettingsCfg(cfg, "useremailFieldId");
         userdepartFieldId = PluginSettingsServiceTools.getValueFromSettingsCfg(cfg, "userdepartFieldId");
@@ -104,11 +104,11 @@ public class TicketSetupAction extends JiraWebActionSupport
             params.addProperty("reporterDefault", "");
         };
 
-        if (usernameFieldId != null) {
-            params.addProperty("usernameFieldId", usernameFieldId);
-        } else {
-            params.addProperty("usernameFieldId", "");
-        };
+//        if (usernameFieldId != null) {
+//            params.addProperty("usernameFieldId", usernameFieldId);
+//        } else {
+//            params.addProperty("usernameFieldId", "");
+//        };
 
         if (userFullNameFieldId != null) {
             params.addProperty("userFullNameFieldId", userFullNameFieldId);
@@ -150,13 +150,13 @@ public class TicketSetupAction extends JiraWebActionSupport
         this.reporterDefault = reporterDefault;
     }
 
-    public String getUsernameFieldId() {
-        return usernameFieldId;
-    }
-
-    public void setUsernameFieldId(String usernameFieldId) {
-        this.usernameFieldId = usernameFieldId;
-    }
+//    public String getUsernameFieldId() {
+//        return usernameFieldId;
+//    }
+//
+//    public void setUsernameFieldId(String usernameFieldId) {
+//        this.usernameFieldId = usernameFieldId;
+//    }
 
     public String getUseremailFieldId() {
         return useremailFieldId;

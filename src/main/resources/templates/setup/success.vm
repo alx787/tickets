@@ -27,11 +27,18 @@
             <div class="description">Автор задачи по умолчанию</div>
         </div>
 
-        <div class="field-group">
-            <label for="usernameFieldId">Поле ИМЯ ПОЛЬЗОВАТЕЛЯ (логин))<span class="aui-icon icon-required"> required</span></label>
-            <input class="text" type="text" id="usernameFieldId" name="usernameFieldId" value="$usernameFieldId">
+##        <div class="field-group">
+##            <label for="usernameFieldId">Поле ИМЯ ПОЛЬЗОВАТЕЛЯ (логин))<span class="aui-icon icon-required"> required</span></label>
+##            <input class="text" type="text" id="usernameFieldId" name="usernameFieldId" value="$usernameFieldId">
+##
+##            <div class="description">Идентификатор поля ИМЯ ПОЛЬЗОВАТЕЛЯ (цифровой))</div>
+##        </div>
 
-            <div class="description">Идентификатор поля ИМЯ ПОЛЬЗОВАТЕЛЯ (цифровой))</div>
+        <div class="field-group">
+            <label for="useremailFieldId">Поле EMAIL ПОЛЬЗОВАТЕЛЯ<span class="aui-icon icon-required"> required</span></label>
+            <input class="text" type="text" id="useremailFieldId" name="useremailFieldId" value="$useremailFieldId">
+
+            <div class="description">Идентификатор поля EMAIL ПОЛЬЗОВАТЕЛЯ (цифровой))</div>
         </div>
 
         <div class="field-group">
@@ -39,13 +46,6 @@
             <input class="text" type="text" id="userFullNameFieldId" name="userFullNameFieldId" value="$userFullNameFieldId">
 
             <div class="description">Идентификатор поля ПОЛНОГО ИМЕНИ ПОЛЬЗОВАТЕЛЯ (цифровой))</div>
-        </div>
-
-        <div class="field-group">
-            <label for="useremailFieldId">Поле EMAIL ПОЛЬЗОВАТЕЛЯ<span class="aui-icon icon-required"> required</span></label>
-            <input class="text" type="text" id="useremailFieldId" name="useremailFieldId" value="$useremailFieldId">
-
-            <div class="description">Идентификатор поля EMAIL ПОЛЬЗОВАТЕЛЯ (цифровой))</div>
         </div>
 
         <div class="field-group">
@@ -66,6 +66,14 @@
     <div style="margin-top: 20px;">
         Перейти на страницу заявок по <a target="_blank" href="$portalUrl">ссылке</a>
     </div>
+
+
+    <div style="margin-top: 20px; width: 700px">
+        Авторизация на странице заявок происходит по логину и паролю. Значения этих полей могут быть равны, чтобы не было путаницы в будущем.
+        В общем случае логин и пароль могут отличаться, но в авторизации принимает участие именно логин.
+        Вывод значений полей логина и пароля в форме заявки не предусмотрен
+    </div>
+
 
 </body>
 

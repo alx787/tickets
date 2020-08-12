@@ -207,18 +207,29 @@ public class TicketsRest {
 
 
         // значения дополнительных полей - надо будет обязательно проверку
+        // емайл
         String fieldId;
         fieldId = "customfield_" + PluginSettingsServiceTools.getValueFromSettingsCfg(cfg,"useremailFieldId");
-        issueInputParameters.addCustomFieldValue(fieldId, userInfo.getEmail());
+        if (!fieldId.equals("customfield_")) {
+            issueInputParameters.addCustomFieldValue(fieldId, userInfo.getEmail());
+        }
 
+        // подразделение
         fieldId = "customfield_" + PluginSettingsServiceTools.getValueFromSettingsCfg(cfg,"userdepartFieldId");
-        issueInputParameters.addCustomFieldValue(fieldId, userInfo.getDepartment());
+        if (!fieldId.equals("customfield_")) {
+            issueInputParameters.addCustomFieldValue(fieldId, userInfo.getDepartment());
+        }
 
-        fieldId = "customfield_" + PluginSettingsServiceTools.getValueFromSettingsCfg(cfg,"usernameFieldId");
-        issueInputParameters.addCustomFieldValue(fieldId, userInfo.getLogin());
+//  поле имя пользователя пока убираем потому что оно равно емейлу
+//
+//        fieldId = "customfield_" + PluginSettingsServiceTools.getValueFromSettingsCfg(cfg,"usernameFieldId");
+//        issueInputParameters.addCustomFieldValue(fieldId, userInfo.getLogin());
 
+        // фио
         fieldId = "customfield_" + PluginSettingsServiceTools.getValueFromSettingsCfg(cfg,"userFullNameFieldId");
-        issueInputParameters.addCustomFieldValue(fieldId, userInfo.getFio());
+        if (!fieldId.equals("customfield_")) {
+            issueInputParameters.addCustomFieldValue(fieldId, userInfo.getFio());
+        }
 
 
 //        issueInputParameters.addCustomFieldValue("customfield_10001", tUserEmail);

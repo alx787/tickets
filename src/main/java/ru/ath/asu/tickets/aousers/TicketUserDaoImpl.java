@@ -29,7 +29,7 @@ public class TicketUserDaoImpl implements TicketUserDao {
 
     @Override
     public TicketUser[] findByAll() {
-        return ao.find(TicketUser.class);
+        return ao.find(TicketUser.class, Query.select().order("USERNAME ASC"));
     }
 
     @Override
