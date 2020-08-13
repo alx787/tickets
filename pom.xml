@@ -257,7 +257,8 @@
         </plugins>
     </build>
     <properties>
-        <jira.version>7.13.0</jira.version>
+        <!--<jira.version>7.13.0</jira.version>-->
+        <jira.version>8.3.1</jira.version>
         <amps.version>8.0.2</amps.version>
         <!--<ao.version>0.9.6</ao.version>-->
         <!--<ao.version>3.2.9</ao.version>-->

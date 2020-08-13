@@ -99,7 +99,7 @@ tickets.module = (function () {
                 // var dataLength = data.length;
                 // var strMess = "";
 
-                console.log(data);
+                //console.log(data);
                 //
                 // if (data.status == "ok") {
                 //     console.log("ok");
@@ -107,7 +107,9 @@ tickets.module = (function () {
                 // }
                 AJS.$("#popupHeader").text("Заявка " + data.number + " от " + data.created);
                 AJS.$("#popupSummary").text(data.summary);
-                AJS.$("#popupDescription").text(data.description);
+
+                // AJS.$("#popupDescription").text(data.description);
+                AJS.$("#popupDescription").html(data.description.replace(/\n/g, "<p/>"));
 
                 AJS.dialog2("#demo-dialog").show();
 

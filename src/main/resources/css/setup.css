@@ -12,15 +12,21 @@
 }
 
 .user-column-check {
-    width: 20px;
+    padding: 5px 0;
+    width: 40px;
+    text-align: center;
 }
 
 .user-column-npp {
-    width: 80px;
+    padding: 5px 0;
+    width: 50px;
+    text-align: center;
 }
 
 .user-column-login {
-    width: 100px;
+    padding: 5px 0;
+    width: 120px;
+    text-align: left;
 }
 
 .user-column-fio {

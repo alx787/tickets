@@ -147,13 +147,13 @@
     ## заголовок таблицы
 
         <div style="width: 100%; height: 30px; background-color: #0747a6; color: #FFFFFF; line-height: 29px; border-radius: 3px;">
-            <div style="float: left;width: 50px; text-align: center;">v</div>
-            <div style="float: left; width: 100px;">№</div>
-            <div style="float: left; width: 120px;">Логин</div>
-            <div style="float: left; width: 280px;">ФИО</div>
-            <div style="float: left; width: 100px;">email</div>
-            <div style="float: left; width: 150px;">Подразделение</div>
-            <div style="float: left; width: 100px;">Пароль</div>
+            <div style="float: left; width: 40px; text-align: center;">v</div>
+            <div style="float: left; width: 50px; text-align: center;">№</div>
+            <div style="float: left; width: 120px; text-align: center;">Логин</div>
+            <div style="float: left; width: 280px; text-align: center;">ФИО</div>
+            <div style="float: left; width: 100px; text-align: center;">email</div>
+            <div style="float: left; width: 150px; text-align: center;">Подразделение</div>
+            <div style="float: left; width: 100px; text-align: center;">Пароль</div>
         </div>
 
         <div style="width: 100%; height: 300px; overflow-y: auto; overflow-x: hidden; background-color: #FFFFFF;">

@@ -27,35 +27,35 @@ table {
 }
 
 #ticketsFromUsers .order-created {
-    padding: 5px 10px;
-    width: 80px;
-    text-align: center ">20.05.2019;
+    padding: 5px 0;
+    width: 100px;
+    text-align: center;
 }
 
 #ticketsFromUsers .order-number {
-    padding: 5px 10px;
-    width: 80px;
+    padding: 5px 0;
+    width: 100px;
     text-align: center;
 }
 
 #ticketsFromUsers .order-descr {
-    padding: 5px 10px;
-    width: 380px;
+    padding: 5px 0;
+    width: 400px;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow-x:  hidden;
 }
 
 #ticketsFromUsers .order-status {
-    padding: 5px 10px;
-    width: 80px;
+    padding: 5px 0;
+    width: 100px;
     text-align: left;
 }
 
 #ticketsFromUsers .order-duedate {
-    padding: 5px 10px;
-    width: 80px;
-    text-align: left;
+    padding: 5px 0;
+    width: 100px;
+    text-align: center;
 }
 
 #paginator li {

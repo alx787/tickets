@@ -192,7 +192,11 @@ public class TicketsRest {
         issueInputParameters.setSkipScreenCheck(true);
 
         issueInputParameters.setProjectId(project.getId());
-        issueInputParameters.setIssueTypeId("10000");
+//        issueInputParameters.setIssueTypeId("10000");
+
+        // для разных установок джиры могут быть различные идентификаторы типов задач и возможно статусов тоже
+        issueInputParameters.setIssueTypeId("10002");
+
         issueInputParameters.setStatusId("10000");
 
         issueInputParameters.setSummary(tTheme);
@@ -485,15 +489,22 @@ public class TicketsRest {
         log.warn(cfg);
 
         String projectKey = PluginSettingsServiceTools.getValueFromSettingsCfg(cfg, "projectKey");
-        String usernameFieldId = PluginSettingsServiceTools.getValueFromSettingsCfg(cfg, "usernameFieldId");
+//        String usernameFieldId = PluginSettingsServiceTools.getValueFromSettingsCfg(cfg, "usernameFieldId");
+        String useremailFieldId = PluginSettingsServiceTools.getValueFromSettingsCfg(cfg, "useremailFieldId");
         String reporterName = PluginSettingsServiceTools.getValueFromSettingsCfg(cfg, "reporterDefault");
 
         Long uFielfId = 0L;
 
+//        try {
+//            uFielfId = Long.valueOf(usernameFieldId);
+//        } catch (Exception e) {
+//            return Response.ok("{\"status\":\"error\", \"description\":\"bad username field id <" + usernameFieldId + ">\"}").build();
+//        }
+
         try {
-            uFielfId = Long.valueOf(usernameFieldId);
+            uFielfId = Long.valueOf(useremailFieldId);
         } catch (Exception e) {
-            return Response.ok("{\"status\":\"error\", \"description\":\"bad username field id <" + usernameFieldId + ">\"}").build();
+            return Response.ok("{\"status\":\"error\", \"description\":\"bad username field id <" + useremailFieldId + ">\"}").build();
         }
 
 
@@ -515,7 +526,8 @@ public class TicketsRest {
 
         JqlQueryBuilder queryBuilder = JqlQueryBuilder.newBuilder();
 
-        JqlClauseBuilder builder = queryBuilder.orderBy().issueKey(SortOrder.DESC).endOrderBy().where().project(project.getId()).and().customField(Long.valueOf(usernameFieldId)).like(userInfo.getLogin());
+//        JqlClauseBuilder builder = queryBuilder.orderBy().issueKey(SortOrder.DESC).endOrderBy().where().project(project.getId()).and().customField(Long.valueOf(usernameFieldId)).like(userInfo.getLogin());
+        JqlClauseBuilder builder = queryBuilder.orderBy().issueKey(SortOrder.DESC).endOrderBy().where().project(project.getId()).and().customField(Long.valueOf(useremailFieldId)).like(userInfo.getEmail());
 
         if (status.equals("open")) {
             builder.and();
@@ -561,7 +573,9 @@ public class TicketsRest {
 //        SearchService searchService = ComponentAccessor
 
 
-        SearchResults results = null;
+        SearchResults searchResults = null;
+        SearchService searchService = ComponentAccessor.getComponent(SearchService.class);
+
         ////////////////////////////////////////
         // количество строк в выводимой таблице
         int cntRows = 20;
@@ -577,7 +591,7 @@ public class TicketsRest {
             PagerFilter pagerFilter = new PagerFilter((iPage - 1) * cntRows, cntRows);
 //            PagerFilter pagerFilter = new PagerFilter(0, 2);
 
-            results = ComponentAccessor.getComponentOfType(SearchService.class).search(jAC.getLoggedInUser(), query, pagerFilter);
+            searchResults = searchService.search(jAC.getLoggedInUser(), query, pagerFilter);
 
         } catch (SearchException e) {
             e.printStackTrace();
@@ -591,16 +605,16 @@ public class TicketsRest {
         log.warn(" ======= issues list from rest =======");
 
         log.warn(" ======= total pages =======");
-        log.warn(String.valueOf(results.getPages().size()));
-        log.warn(String.valueOf(results.getTotal()));
+        log.warn(String.valueOf(searchResults.getPages().size()));
+        log.warn(String.valueOf(searchResults.getTotal()));
 
 
         ///////////////////////////////////////////////
         // сформируем ответ в виде json
         JsonObject jsonRestAnswer = new JsonObject();
         jsonRestAnswer.addProperty("status", "ok");
-        jsonRestAnswer.addProperty("total", results.getTotal());
-        jsonRestAnswer.addProperty("pages", results.getPages().size());
+        jsonRestAnswer.addProperty("total", searchResults.getTotal());
+        jsonRestAnswer.addProperty("pages", searchResults.getPages().size());
         jsonRestAnswer.addProperty("currPage", iPage);
 
         JsonArray jsonIssuesArray = new JsonArray();
@@ -608,7 +622,9 @@ public class TicketsRest {
 //        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
-        for (Issue oneIssue : results.getIssues()) {
+        List<Issue> issueList = (List<Issue>)searchResults.getResults();
+
+        for (Issue oneIssue : issueList) {
             log.warn("issue: " + oneIssue.getKey() + " - " + oneIssue.getSummary());
 
             JsonObject jsonIssue = new JsonObject();
