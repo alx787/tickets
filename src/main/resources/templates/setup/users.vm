@@ -160,22 +160,21 @@
             <table id="ticketsUsers" class="aui">
                 <tbody>
 
-                    <tr>
-                        <td class="user-column-check"><input type="checkbox" /></td>
-
-                    ##  <input type="checkbox" id="scales" name="scales" checked="">
-                        <td class="user-column-npp">Номер</td>
-                        <td class="user-column-login">Логин</td>
-                        <td class="user-column-fio">ФИО</td>
-                        <td class="user-column-email">email</td>
-                        <td class="user-column-podr">Подразделение</td>
-                        <td class="user-column-password">Пароль</td>
-                        <td>
-                            <div class="user-edit-button">
-                                <span class="aui-icon aui-icon-small aui-iconfont-new-edit">Edit</span>
-                            </div>
-                        </td>
-                    </tr>
+##                    <tr>
+##                        <td class="user-column-check"><input type="checkbox" /></td>
+##
+##                        <td class="user-column-npp">Номер</td>
+##                        <td class="user-column-login">Логин</td>
+##                        <td class="user-column-fio">ФИО</td>
+##                        <td class="user-column-email">email</td>
+##                        <td class="user-column-podr">Подразделение</td>
+##                        <td class="user-column-password">Пароль</td>
+##                        <td>
+##                            <div class="user-edit-button">
+##                                <span class="aui-icon aui-icon-small aui-iconfont-new-edit">Edit</span>
+##                            </div>
+##                        </td>
+##                    </tr>
 
 
                 </tbody>
